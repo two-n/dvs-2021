@@ -14,7 +14,7 @@ builds static, compiled filed in `dist` folder. Use `prototypes-build` when buil
 to deploy to [two-n prototypes site](http://prototypes.two-n.com/dataviz-pay-explorer/).
 
 ### `node ./dataPrep.mjs`
-parses csv file named `data_2021_main.csv` in `./data` folder and creates a json file called `formattedData.json` that is read into `src/components/App.js`
+parses csv file named `data_2021_main.csv` in `./data` folder and creates a json file called `formattedData.json` that is read into `index.js`
 
 *requirements for generating data*
 * csv must be named `data_2021_main.csv`
