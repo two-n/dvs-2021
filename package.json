@@ -1,0 +1,28 @@
+{
+  "name": "dvs-2021",
+  "version": "1.0.0",
+  "description": "Data Vis Society Competition Entry 2021",
+  "repository": "https://github.com/two-n/dvs-2021.git",
+  "author": "miasza < mia@two-n.com >",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@parcel/transformer-image": "^2.0.0-rc.0",
+    "@parcel/transformer-sass": "2.0.0-rc.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.21.1",
+    "parcel": "^2.0.0-nightly.286",
+    "sass": "^1.26.8"
+  },
+  "scripts": {
+    "dev": "parcel index.html",
+    "prebuild": "rm -rf dist",
+    "build": "parcel build index.html",
+    "prototypes-build": "yarn prebuild && parcel build index.html --public-url http://prototypes.two-n.com/dataviz-pay-explorer",
+    "deploy": "rsync -avz --delete ./dist/ twoninc@two-n.com:/home/twoninc/prototypes.two-n.com/dataviz-pay-explorer"
+  },
+  "dependencies": {
+    "d3": "^7.3.0"
+  }
+}
