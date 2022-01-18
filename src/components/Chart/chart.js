@@ -1,7 +1,7 @@
 import {
   select, axisBottom, axisLeft, format, pie, arc, area,
   scaleLinear, scaleBand, scaleOrdinal, max, ascending,
-  curveNatural, axisTop
+  curveNatural, axisTop, descending
 } from 'd3'
 
 // local
@@ -128,6 +128,7 @@ export default class Chart {
       this.experience,
       d => this.handleFilter(d, FILTERS.EXPERIENCE));
   }
+
   drawArea() {
     const areaData = getAreaData(this.barData)
     const loss = !areaData.find(([_, y]) => y < 0)
@@ -196,21 +197,21 @@ export default class Chart {
 
   drawDonut() {
     const colorScale = scaleOrdinal(["total_days", "worked_days"], ["#f2f2f2", CONFIG.COLOR_RANGE[1]])
-
     const gapData = getPercentData(this.barData)
     const donutData = [{ type: "worked_days", value: 262 + gapData * 262 }]
     let overflowData = [];
     if (gapData > 0) {
       overflowData = [{ type: "worked_days", value: gapData * 262 }, { type: "total_days", value: 262 - gapData * 262 }]
     } else {
-      donutData.push({ type: "total_days", value: gapData * 262 })
+      donutData.push({ type: "total_days", value: -gapData * 262 })
       overflowData = []
     }
+
     const pieGen =
       pie()
         // An accessor to tell the pie where to find the data values
         .value((d) => d.value)
-        .sortValues(ascending)
+        .sortValues(gapData < 0 ? descending : ascending)
 
     const arcGen = (donutRadius) =>
       arc()
@@ -239,7 +240,7 @@ export default class Chart {
           })
           // .style("stroke-width", 0.7)
           .style("fill", (d, i) => colorScale(d.data.type))
-          .transition()
+          // .transition()
           .attr("d", d => arcGen(80)(d))
       )
 
@@ -263,7 +264,7 @@ export default class Chart {
           })
           // .style("stroke-width", 0.7)
           .style("fill", (d, i) => colorScale(d.data.type))
-          .transition()
+          // .transition()
           .attr("d", d => arcGen(100)(d))
       )
 
@@ -274,7 +275,7 @@ export default class Chart {
           .join("text")
           .attr("class", "donut")
           .style("stroke", "black")
-          .text(({ type, value }) => type === "worked_days" ? (Math.abs(262 - value)).toFixed(2) + " days" : "")
+          .text(({ type, value }) => type === "worked_days" ? (262 - value > 0 ? "-" : "+") + (Math.abs(262 - value)).toFixed(2) + " days" : "")
           .attr("text-anchor", "middle")
           .attr("dy", "0.25em")
         // .transition()
