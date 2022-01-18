@@ -1,9 +1,10 @@
-import { CLASSES as C, COLUMN_LABELS } from '../../globals/constants';
+import { CLASSES as C } from '../../globals/constants';
 import { select } from 'd3'
 import './style.scss';
 
 export default class DropDown {
   constructor(parent, options, selected, callback) {
+
     this.parent = parent;
     this.selected = selected;
     this.options = options;
@@ -28,7 +29,7 @@ export default class DropDown {
       .join("div")
       .attr("class", C.OPTION)
       .classed(C.SELECTED, d => d === this.selected)
-      .html(d => COLUMN_LABELS[d])
+      .html(d => d)
       .on("click", function (e, d) {
         e.stopPropagation();
         select(this.parentNode).classed(C.OPEN, false);

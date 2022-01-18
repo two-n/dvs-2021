@@ -1,8 +1,8 @@
 @import "../../globals/styles/variables";
 
 .filter-wrapper {
-  position: absolute;
-  top: 25px;
+  position: relative;
+  // top: 25px;
   width: 100%;
 }
 .filter {
@@ -75,7 +75,7 @@
     cursor: pointer;
     }
     &.selected {
-      font-family: $fontBold ;
+      font-weight: 700 ;
     }
 }
 

@@ -1,5 +1,65 @@
 @import "../../globals/styles/variables";
 
-.Chart {
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+.prototype{
+  min-width: 100vw;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: $colorNeutralLight;
+}
+
+#chart {
+  width: 80%;
+  min-height: 100vh;
+  margin: 0 auto;
+  border: 1px solid $colorNeutralLight;
+  font-size: $fontSize;
+  display: flex;
+  // text-align: center;
+  flex-direction: column;;
+  row-gap: 20px;
+  padding-top: 30px;
+  font-family: $fontNormal;
+  color: black;
+
+  h1 {
+    font-size: $fontSizeLarge;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .dropdown-container {
+    position: relative;
+    // width: 90%;
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+    font-size: $fontSize;
+
+    text {
+      font-family: $fontNormal;
+
+    }
+
+    .wealth-gap {
+      stroke: $colorNeutralDark;
+      fill: $colorNeutralMed;
+    }
+  }
 
 }
