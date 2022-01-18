@@ -3,7 +3,13 @@ const CLASSES = {
   FILTER: 'filter',
   OPEN: 'open',
   OPTION: 'option',
-  SELECTED: 'selected'
+  SELECTED: 'selected',
+  X: "x",
+  Y: "y",
+  AXIS: "axis",
+  LABEL: "label",
+  BAR: 'bar',
+  PCT: 'pct'
 }
 
 const CONFIG = {

@@ -144,39 +144,38 @@ export default class Chart {
 
     // X-Axis
     svg
-      .selectAll('g.x-axis')
+      .selectAll(`g.${C.X}-${C.AXIS}`)
       .data([0])
       .join('g')
-      .attr('class', 'x-axis')
+      .attr('class', `${C.X}-${C.AXIS}`)
       .attr('transform', `translate(${0}, ${loss ? CONFIG.MARGIN.y : CONFIG.HEIGHT - CONFIG.MARGIN.y})`)
       .transition()
       .call(xAxisLine)
 
     // X - axis label
     svg
-      .selectAll('text.x-axis-label')
+      .selectAll(`text.${C.X}-${C.AXIS}-${C.LABEL}`)
       .data([0])
       .join('text')
-      .attr('class', 'x-axis-label')
+      .attr('class', `${C.X}-${C.AXIS}-${C.LABEL}`)
       .attr('transform', `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT})`)
-      .attr("text-anchor", "middle")
       .text('# Years')
 
     // Y-Axis
     svg
-      .selectAll('g.y-axis')
+      .selectAll(`g.${C.Y}-${C.AXIS}`)
       .data([0])
       .join('g')
-      .attr('class', 'y-axis')
+      .attr('class', `${C.Y}-${C.AXIS}`)
       .attr('transform', `translate(${CONFIG.MARGIN.x}, 0)`)
       .transition()
       .call(yAxisLine)
 
     svg
-      .selectAll('text.y-axis-label')
+      .selectAll(`text.${C.Y}-${C.AXIS}-${C.LABEL}`)
       .data([0])
       .join('text')
-      .attr('class', 'y-axis-label')
+      .attr('class', `${C.Y}-${C.AXIS}-${C.LABEL}`)
       .attr('transform', `translate(0, ${CONFIG.HEIGHT / 2})rotate(-90)`)
       .attr("text-anchor", "middle")
       .text('TOTAL')
@@ -276,7 +275,6 @@ export default class Chart {
           .attr("class", "donut")
           .style("stroke", "black")
           .text(({ type, value }) => type === "worked_days" ? (262 - value > 0 ? "-" : "+") + (Math.abs(262 - value)).toFixed(2) + " days" : "")
-          .attr("text-anchor", "middle")
           .attr("dy", "0.25em")
         // .transition()
         // .duration(500)
@@ -288,12 +286,11 @@ export default class Chart {
     const gapData = getPercentData(this.barData)
     const svg = this.percentSvg
     svg
-      .selectAll("text.pct")
+      .selectAll(`text.${C.PCT}`)
       .data([gapData])
       .join("text")
-      .attr("class", "pct")
+      .attr("class", `${C.PCT}`)
       .attr("transform", `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`)
-      .attr("text-anchor", "middle")
       .html((d) => `${(1 - d).toFixed(2)} cents on the dollar`);
   }
 
@@ -308,53 +305,51 @@ export default class Chart {
     const svg = this.barSvg
 
     svg
-      .selectAll('g.x-axis')
+      .selectAll(`g.${C.X}-${C.AXIS}`)
       .data([0])
       .join('g')
-      .attr('class', 'x-axis')
+      .attr('class', `${C.X}-${C.AXIS}`)
       .attr('transform', `translate(${0}, ${CONFIG.HEIGHT - CONFIG.MARGIN.y})`)
       .transition()
       .call(xAxis)
 
     // X - axis label
     svg
-      .selectAll('text.x-axis-label')
+      .selectAll(`text.${C.X}-${C.AXIS}-${C.LABEL}`)
       .data([0])
       .join('text')
-      .attr('class', 'x-axis-label')
+      .attr('class', `${C.X}-${C.AXIS}-${C.LABEL}`)
       .attr('transform', `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT})`)
-      .attr("text-anchor", "middle")
       .text('GENDER')
 
     // Y-Axis
     svg
-      .selectAll('g.y-axis')
+      .selectAll(`g.${C.Y}-${C.AXIS}`)
       .data([0])
       .join('g')
-      .attr('class', 'y-axis')
+      .attr('class', `${C.Y}-${C.AXIS}`)
       .attr('transform', `translate(${CONFIG.MARGIN.x}, 0)`)
       .transition()
       .call(yAxis)
 
     svg
-      .selectAll('text.y-axis-label')
+      .selectAll(`text.${C.Y}-${C.AXIS}-${C.LABEL}`)
       .data([0])
       .join('text')
-      .attr('class', 'y-axis-label')
+      .attr('class', `${C.Y}-${C.AXIS}-${C.LABEL}`)
       .attr('transform', `translate(${20}, ${CONFIG.HEIGHT / 2})rotate(-90)`)
-      .attr("text-anchor", "middle")
       .text('YEARLY PAY')
 
     svg
-      .selectAll("g.bar")
+      .selectAll(`g.${C.BAR}`)
       .data(barData)
       .join("g")
-      .attr("class", "bar")
+      .attr("class", `${C.BAR}`)
       .attr("transform", ([gender]) => `translate(${xScale(gender)}, ${0})`)
-      .selectAll("rect.bar")
+      .selectAll(`rect.${C.BAR}`)
       .data((d) => [d])
       .join("rect")
-      .attr("class", "bar")
+      .attr("class", `${C.BAR}`)
       .attr("width", xScale.bandwidth())
       .attr("fill", ([gender]) => colorScale(gender))
       .attr("y", ([, { avg_pay_low }]) => yScale(avg_pay_low))

@@ -51,8 +51,20 @@ body {
     align-items: center;
     font-size: $fontSize;
 
+    .y-axis .tick {
+      text {
+        text-anchor: end;
+      }
+    }
     text {
       font-family: $fontNormal;
+        text-anchor: middle;
+
+      &.pct {
+        font-size: 20px;
+        text-anchor: middle;
+
+      }
 
     }
 
