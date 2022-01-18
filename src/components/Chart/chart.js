@@ -1,7 +1,7 @@
 import {
   select, axisBottom, axisLeft, format, pie, arc, area,
   scaleLinear, scaleBand, scaleOrdinal, max, ascending,
-  curveNatural
+  curveNatural, axisTop
 } from 'd3'
 
 // local
@@ -130,26 +130,29 @@ export default class Chart {
   }
   drawArea() {
     const areaData = getAreaData(this.barData)
-    const yRange = [0, max(areaData.map(([_, dollars]) => dollars))]
+    const loss = !areaData.find(([_, y]) => y < 0)
+    const mappedAreaData = areaData.map(([x, y]) => (y < 0 ? [x, -y] : [x, y]))
+    const yDomain = [0, max(mappedAreaData.map(([_, dollars]) => dollars))]
+    const yRange = loss ? [CONFIG.MARGIN.y, CONFIG.HEIGHT - CONFIG.MARGIN.y] : [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y]
     const xLine = scaleLinear([0, 30], [CONFIG.MARGIN.x, CONFIG.WIDTH - CONFIG.MARGIN.x])
-    const yLine = scaleLinear(yRange, [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y])
-    const xAxisLine = axisBottom(xLine).ticks(8).tickSizeOuter(0)
+    const yLine = scaleLinear(yDomain, yRange)
+    const xAxisLine = loss ? axisTop(xLine).ticks(8).tickSizeOuter(0) : axisBottom(xLine).ticks(8).tickSizeOuter(0)
     const yAxisLine = axisLeft(yLine).ticks(10).tickFormat(format("$~s")).tickSizeOuter(0)
 
     const svg = this.areaSvg
 
     // X-Axis
-    this.areaSvg
+    svg
       .selectAll('g.x-axis')
       .data([0])
       .join('g')
       .attr('class', 'x-axis')
-      .attr('transform', `translate(${0}, ${CONFIG.HEIGHT - CONFIG.MARGIN.y})`)
+      .attr('transform', `translate(${0}, ${loss ? CONFIG.MARGIN.y : CONFIG.HEIGHT - CONFIG.MARGIN.y})`)
       .transition()
       .call(xAxisLine)
 
     // X - axis label
-    this.areaSvg
+    svg
       .selectAll('text.x-axis-label')
       .data([0])
       .join('text')
@@ -159,7 +162,7 @@ export default class Chart {
       .text('# Years')
 
     // Y-Axis
-    this.areaSvg
+    svg
       .selectAll('g.y-axis')
       .data([0])
       .join('g')
@@ -168,7 +171,7 @@ export default class Chart {
       .transition()
       .call(yAxisLine)
 
-    this.areaSvg
+    svg
       .selectAll('text.y-axis-label')
       .data([0])
       .join('text')
@@ -183,10 +186,9 @@ export default class Chart {
         .x(([x]) => xLine(x))
         .y0(yLine(0))
         .y1(([_, y]) => yLine(y))
-    // lines
-    this.areaSvg
+    svg
       .selectAll('path.wealth-gap')
-      .data([areaData])
+      .data([mappedAreaData])
       .join('path')
       .attr('class', 'wealth-gap')
       .attr("d", areaGenerator)
@@ -196,7 +198,6 @@ export default class Chart {
     const colorScale = scaleOrdinal(["total_days", "worked_days"], ["#f2f2f2", CONFIG.COLOR_RANGE[1]])
 
     const gapData = getPercentData(this.barData)
-    // const donutRadius = 70
     const donutData = [{ type: "worked_days", value: 262 + gapData * 262 }]
     let overflowData = [];
     if (gapData > 0) {
