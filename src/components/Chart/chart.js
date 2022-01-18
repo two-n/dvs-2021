@@ -23,6 +23,7 @@ export default class Chart {
     this.gender = "Female"
     this.education = "B.A."
     this.experience = Object.keys(EXPERIENCE)[0]
+    this.salary = 30000
 
   }
 
@@ -30,8 +31,24 @@ export default class Chart {
     // add title
     this.selection
       .append("h1")
-      .html("What is your pay gap?")
+      .html("How does your salary compare?")
 
+    const inputContainer = this.selection
+      .append("div")
+      .attr("class", "input-container")
+
+    inputContainer
+      .append("input")
+      .attr("value", this.salary)
+      .on("change", (e) => {
+        e.stopPropagation();
+        this.salary = +e.target.value.trim().replace(/,/, "")
+        if (typeof this.salary === "number") this.draw()
+      });
+
+    inputContainer
+      .append("button")
+      .html("submit")
     // add dropdowns
     const dropdownContainer = this.selection
       .append("nav")
@@ -103,7 +120,7 @@ export default class Chart {
   draw() {
 
     // update data
-    this.barData = getBarData(this.data, this.region, this.experience)
+    this.barData = [['You', { avg_pay_high: this.salary }], ...getBarData(this.data, this.region, this.experience, this.gender)]
     this.drawBars()
     this.drawPercent()
     this.drawDonut()
@@ -210,7 +227,7 @@ export default class Chart {
       pie()
         // An accessor to tell the pie where to find the data values
         .value((d) => d.value)
-        .sortValues(gapData < 0 ? descending : ascending)
+        .sort((a, b) => descending(a.type, b.type))
 
     const arcGen = (donutRadius) =>
       arc()
@@ -298,10 +315,10 @@ export default class Chart {
 
     const barData = this.barData
     const yScale = scaleLinear([0, max(barData.map(([_, { avg_pay_high }]) => avg_pay_high))], [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y])
-    const xScale = scaleBand(["Female", "Male", "Self-described"], [CONFIG.MARGIN.x, CONFIG.WIDTH - CONFIG.MARGIN.x]).padding(.05)
+    const xScale = scaleBand(["You", this.gender], [CONFIG.MARGIN.x, CONFIG.WIDTH - CONFIG.MARGIN.x]).padding(.05)
     const xAxis = axisBottom(xScale).tickSizeOuter(0)
     const yAxis = axisLeft(yScale).tickFormat(format("$~s")).tickSizeOuter(0)
-    const colorScale = scaleOrdinal(["Female", "Male", "Self-described"], CONFIG.COLOR_RANGE)
+    const colorScale = scaleOrdinal(["You", this.gender], CONFIG.COLOR_RANGE)
     const svg = this.barSvg
 
     svg
@@ -352,10 +369,10 @@ export default class Chart {
       .attr("class", `${C.BAR}`)
       .attr("width", xScale.bandwidth())
       .attr("fill", ([gender]) => colorScale(gender))
-      .attr("y", ([, { avg_pay_low }]) => yScale(avg_pay_low))
+      .attr("y", ([, { avg_pay_high }]) => yScale(avg_pay_high))
       .attr(
         "height",
-        ([_, { avg_pay_low }]) => CONFIG.HEIGHT - CONFIG.MARGIN.y - yScale(avg_pay_low)
+        ([_, { avg_pay_high }]) => CONFIG.HEIGHT - CONFIG.MARGIN.y - yScale(avg_pay_high)
       );
 
   }

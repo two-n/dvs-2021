@@ -1,8 +1,8 @@
 
-import { group, rollups, sum, max } from 'd3'
+import { group, rollups, sum, max, range } from 'd3'
 import { EXPERIENCE, REGIONS } from './constants'
 
-const getBarData = (data, currentRegion, yearsDVExp) => {
+const getBarData = (data, currentRegion, yearsDVExp, currentGender) => {
   const people = data.filter(
     ({
       Loc1Country,
@@ -14,7 +14,7 @@ const getBarData = (data, currentRegion, yearsDVExp) => {
     }) =>
       REGIONS[currentRegion].includes(Loc1Country) &&
       EXPERIENCE[yearsDVExp].includes(YearsDVExperience) &&
-      ["Female", "Male", "Self-described"].includes(Gender_summarized)
+      currentGender === Gender_summarized
   )
 
 
@@ -75,19 +75,17 @@ const getBarData = (data, currentRegion, yearsDVExp) => {
   return payAverages
 }
 
-
 getPercentData = (data) => {
-  const gap = data[1][1].avg_pay_low - data[0][1].avg_pay_low
+  const gap = data[1][1].avg_pay_high - data[0][1].avg_pay_high
   const gapPercent = gap /
     max(data.flatMap(([k, { avg_pay_high }]) => avg_pay_high))
 
   return gapPercent
 }
-
 const getAreaData = (data) => {
-  const gap = data[1][1].avg_pay_low - data[0][1].avg_pay_low
+  const gap = data[1][1].avg_pay_high - data[0][1].avg_pay_high
 
-  const growth = [...Array(30).keys()].reduce((t, v, i, arr) => ({
+  const growth = [...range(1, 31).keys()].reduce((t, v, i, arr) => ({
     ...t,
     [v]: arr[i - 1] || arr[i - 1] === 0 ? t[i - 1] * 1.105 : gap
   }), {})
