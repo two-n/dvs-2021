@@ -6,7 +6,8 @@ import {
 
 // local
 import DropDown from '../Dropdown/dropDown'
-import { CLASSES as C, CONFIG, EXPERIENCE, FILTERS, REGIONS } from '../../globals/constants'
+import Toggle from '../Toggle/toggle'
+import { CLASSES as C, CONFIG, EXPERIENCE, FILTERS, REGIONS, TOGGLE_VALS } from '../../globals/constants'
 import { getBarData, getPercentData, getAreaData } from '../../globals/helpers'
 
 import './style.scss';
@@ -24,10 +25,25 @@ export default class Chart {
     this.education = "B.A."
     this.experience = Object.keys(EXPERIENCE)[0]
     this.salary = 30000
+    this.toggleVal = TOGGLE_VALS[0]
 
   }
 
   init() {
+
+    // setup toggle
+    this.toggleWrapper = this.selection
+      .append('div')
+      .attr('class', `${C.TOGGLE}-${C.WRAPPER}`)
+
+    this.toggle = new Toggle(this.toggleWrapper,
+      TOGGLE_VALS,
+      this.toggleVal.val,
+      (d) => {
+        this.toggleVal = TOGGLE_VALS.find(({ val }) => val === d)
+        this.selection.classed("color", d)
+        this.draw()
+      });
     // add title
     this.selection
       .append("h1")
@@ -208,11 +224,13 @@ export default class Chart {
       .data([mappedAreaData])
       .join('path')
       .attr('class', 'wealth-gap')
+      .transition()
+      .attr("fill", CONFIG.COLOR_RANGE[this.toggleVal.text][0])
       .attr("d", areaGenerator)
   }
 
   drawDonut() {
-    const colorScale = scaleOrdinal(["total_days", "worked_days"], ["#f2f2f2", CONFIG.COLOR_RANGE[1]])
+    const colorScale = scaleOrdinal(["total_days", "worked_days"], ["#f2f2f2", CONFIG.COLOR_RANGE[this.toggleVal.text][1]])
     const gapData = getPercentData(this.barData)
     const donutData = [{ type: "worked_days", value: 262 + gapData * 262 }]
     let overflowData = [];
@@ -255,9 +273,11 @@ export default class Chart {
             return colorScale(d.data.type)
           })
           // .style("stroke-width", 0.7)
-          .style("fill", (d, i) => colorScale(d.data.type))
+
           // .transition()
           .attr("d", d => arcGen(80)(d))
+          .transition()
+          .style("fill", (d, i) => colorScale(d.data.type))
       )
 
     const donutGroup = svg
@@ -279,9 +299,11 @@ export default class Chart {
             return colorScale(d.data.type)
           })
           // .style("stroke-width", 0.7)
-          .style("fill", (d, i) => colorScale(d.data.type))
+
           // .transition()
           .attr("d", d => arcGen(100)(d))
+          .transition()
+          .style("fill", (d, i) => colorScale(d.data.type))
       )
 
       .call((g) =>
@@ -318,7 +340,7 @@ export default class Chart {
     const xScale = scaleBand(["You", this.gender], [CONFIG.MARGIN.x, CONFIG.WIDTH - CONFIG.MARGIN.x]).padding(.05)
     const xAxis = axisBottom(xScale).tickSizeOuter(0)
     const yAxis = axisLeft(yScale).tickFormat(format("$~s")).tickSizeOuter(0)
-    const colorScale = scaleOrdinal(["You", this.gender], CONFIG.COLOR_RANGE)
+    const colorScale = scaleOrdinal(["You", this.gender], CONFIG.COLOR_RANGE[this.toggleVal.text])
     const svg = this.barSvg
 
     svg
@@ -368,12 +390,13 @@ export default class Chart {
       .join("rect")
       .attr("class", `${C.BAR}`)
       .attr("width", xScale.bandwidth())
-      .attr("fill", ([gender]) => colorScale(gender))
       .attr("y", ([, { avg_pay_high }]) => yScale(avg_pay_high))
       .attr(
         "height",
         ([_, { avg_pay_high }]) => CONFIG.HEIGHT - CONFIG.MARGIN.y - yScale(avg_pay_high)
-      );
+      )
+      .transition()
+      .attr("fill", ([gender]) => colorScale(gender))
 
   }
 

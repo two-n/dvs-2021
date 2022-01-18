@@ -9,14 +9,19 @@ const CLASSES = {
   AXIS: "axis",
   LABEL: "label",
   BAR: 'bar',
-  PCT: 'pct'
+  PCT: 'pct',
+  TOGGLE: 'toggle',
+  WRAPPER: 'wrapper'
 }
 
 const CONFIG = {
   HEIGHT: 300,
   WIDTH: 400,
   MARGIN: { x: 80, y: 40 },
-  COLOR_RANGE: ["#929292", "#6c6c6c"]
+  COLOR_RANGE: {
+    gray: ["#929292", "#6c6c6c"], color: ["#2D898B",
+      "#6B0F1A"]
+  }
 }
 
 const FILTERS = {
@@ -25,6 +30,8 @@ const FILTERS = {
   EDUCATION: 'education',
   EXPERIENCE: 'experience'
 }
+
+const TOGGLE_VALS = [{ text: "color", val: false }, { text: "gray", val: true }]
 
 const REGIONS = {
   Europe: ["Russia", "United Kingdom", "Germany", "Switzerland", "Sweden", "Netherlands", "Ireland", "Italy", "Spain", "France", "Finland", "Lithuania", "Hungary", "Portugal", "Albania", "Poland", "Czech Republic (Czechia)", "Slovenia", "Bulgaria", "Greece", "Denmark", "Belgium", "Croatia", "Austria", "Cyprus", "Romania", "North Macedonia", "Georgia", "Luxembourg", "Norway", "Ukraine", "Armenia", "Belarus", "Serbia", "Iceland"
@@ -39,4 +46,4 @@ const REGIONS = {
 
 const EXPERIENCE = { "2 or less": ["Less than 1 year", "1", "2"], "3-5": ["3", "4", "5"], "6-10": ["6–10"], "10 or more": ["11–15", "16–20", "21–25", "26–30", "More than 30"] }
 
-export { CLASSES, CONFIG, REGIONS, EXPERIENCE, FILTERS }
+export { CLASSES, CONFIG, REGIONS, EXPERIENCE, FILTERS, TOGGLE_VALS }
