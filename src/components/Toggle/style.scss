@@ -1,0 +1,78 @@
+@import "../../globals/styles/variables";
+
+section.data-vis .toggle-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+section.data-vis .toggle{
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  align-items: center;
+  column-gap: .5em;
+  font-family: $fontNormal;
+  font-size: $fontSize;
+  text-transform: capitalize;
+  cursor: pointer;
+
+  .option{
+    color: $colorNeutralMed;
+
+    &.selected{
+      font-family: $fontNormal;
+      color: $colorNeutralText;
+    }
+
+    &:last-of-type{
+      grid-column: 3;
+    }
+  }
+
+  .switch{
+    position: relative;
+    grid-column: 2;
+    grid-row: 1;
+    width: 36px;
+    height: 100%;
+    display: flex;
+    justify-self: end;
+
+    input{
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+    }
+
+    .slider{
+      display: inline-block;
+      cursor: pointer;
+      width: 100%;
+      height: 16px;
+      border-radius: 10px;
+      border: $colorNeutralMed solid 1px;
+      position: relative;
+
+      &:before{
+        position: absolute;
+        content: '';
+        width: 10px;
+        height: 10px;
+        left: 2px;
+        bottom: 2px;
+        background-color: $colorNeutralMed;
+        border-radius: 50%;
+        border: 1px $colorNeutralText solid;
+        transition: transform 250ms;
+      }
+    }
+
+    $translateAmount: 18px;
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX($translateAmount);
+      -ms-transform: translateX($translateAmount);
+      transform: translateX($translateAmount);
+    }
+  }
+}

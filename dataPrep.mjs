@@ -10,7 +10,7 @@ Promise.all([
   .then(() => console.log('success'));
 
 function formatData({ PayAnnual, Loc1Country, EducLevel, YearsDVExperience, Gender_summarized }) {
-  return [
+  return (
     { PayAnnual, Loc1Country, EducLevel, YearsDVExperience, Gender_summarized }
-  ]
+  )
 }

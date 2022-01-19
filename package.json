@@ -8,7 +8,7 @@
   "private": true,
   "devDependencies": {
     "@parcel/transformer-image": "^2.0.0-rc.0",
-    "@parcel/transformer-sass": "2.0.0-rc.0",
+    "@parcel/transformer-sass": "^2.2.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.21.1",
