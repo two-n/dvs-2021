@@ -4,10 +4,11 @@
   position: relative;
   // top: 25px;
   width: 100%;
+
 }
 .filter {
   position: absolute;
-  // left: 120px;
+  // left: 10%;
   border: 1px solid $colorNeutralMed;
   border-radius: 4px;
   font-size: $fontSize;
@@ -21,8 +22,8 @@
   top: 6px;
   height: 4px;
   width: 4px;
-  border-left: 2px solid $colorNeutralLight;
-  border-top: 2px solid $colorNeutralLight;
+  border-left: 2px solid $colorNeutralMed;
+  border-top: 2px solid $colorNeutralMed;
   transform: rotate(-135deg);
   transition: transform 250ms, top 250ms;
   z-index: 1;

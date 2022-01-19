@@ -10,9 +10,7 @@ export default class Toggle {
     this.el = this.parent
       .append('div')
       .attr('class', C.TOGGLE)
-    console.log(this.parent)
-    console.log(this.options)
-    console.log(this.selected)
+
     this.options = this.el.selectAll(`div.${C.OPTION}`)
       .data(options)
       .join('div')

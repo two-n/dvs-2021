@@ -47,8 +47,12 @@ export default class Chart {
     // add title
     this.selection
       .append("h1")
-      .html("How does your salary compare?")
+      .html("How Does your Salary Compare?")
 
+    this.selection
+      .append("div")
+      .attr("class", "input-label")
+      .html("Enter your yearly income")
     const inputContainer = this.selection
       .append("div")
       .attr("class", "input-container")
@@ -64,23 +68,33 @@ export default class Chart {
 
     inputContainer
       .append("button")
-      .html("submit")
+      .html("→")
+
     // add dropdowns
     const dropdownContainer = this.selection
       .append("nav")
       .attr("class", "dropdown-container")
+    // gender dropdown
+    dropdownContainer
+      .append("div")
+      .attr("class", "filter-label")
+      .html("Compare to")
+    this.genderWrapper = dropdownContainer
+      .append("div")
+      .attr("class", "filter-wrapper")
+    dropdownContainer
+      .append("div")
+      .attr("class", "filter-label")
+      .html("in")
     // region dropdown
     this.regionWrapper = dropdownContainer
       .append("div")
       .attr("class", "filter-wrapper")
 
-
-    // gender dropdown
-    this.genderWrapper = dropdownContainer
+    dropdownContainer
       .append("div")
-      .attr("class", "filter-wrapper")
-
-
+      .attr("class", "filter-label")
+      .html("with")
     // education dropdown
     // const educationWrapper = dropdownContainer
     //   .append("div")
@@ -94,36 +108,64 @@ export default class Chart {
     this.experienceWrapper = dropdownContainer
       .append("div")
       .attr("class", "filter-wrapper")
-
+    // dropdownContainer
+    //   .append("div")
+    //   .attr("class", "filter-label")
+    //   .html("years experience")
 
     this.grid = this.selection
       .append("div")
       .attr("class", "grid")
 
-    this.barSvg = this.grid
+    this.barGroup = this.grid
       .append("div")
       .attr("class", "bars")
-      .append("svg")
-      .attr("width", CONFIG.WIDTH)
-      .attr("height", CONFIG.HEIGHT)
 
-    this.percentSvg = this.grid
+    this.barText = this.barGroup
+      .append("div")
+      .attr("class", "text-wrapper")
+
+    this.barSvg =
+      this.barGroup.append("svg")
+        .attr("width", CONFIG.WIDTH)
+        .attr("height", CONFIG.HEIGHT)
+
+    this.percentGroup = this.grid
       .append("div")
       .attr("class", "percent-container")
+
+    this.percentText = this.percentGroup
+      .append("div")
+      .attr("class", "text-wrapper")
+
+    this.percentSvg = this.percentGroup
       .append("svg")
       .attr("width", CONFIG.WIDTH)
       .attr("height", CONFIG.HEIGHT)
 
-    this.donutSvg = this.grid
+    this.donutGroup = this.grid
       .append("div")
       .attr("class", "donut-container")
-      .append("svg")
-      .attr("width", CONFIG.WIDTH)
-      .attr("height", CONFIG.HEIGHT)
 
-    this.areaSvg = this.grid
+    this.donutText = this.donutGroup
+      .append("div")
+      .attr("class", "text-wrapper")
+
+    this.donutSvg =
+      this.donutGroup
+        .append("svg")
+        .attr("width", CONFIG.WIDTH)
+        .attr("height", CONFIG.HEIGHT)
+
+    this.areaGroup = this.grid
       .append("div")
       .attr("class", "area-container")
+
+    this.areaText = this.areaGroup
+      .append("div")
+      .attr("class", "text-wrapper")
+
+    this.areaSvg = this.areaGroup
       .append("svg")
       .attr("width", CONFIG.WIDTH)
       .attr("height", CONFIG.HEIGHT)
@@ -163,15 +205,20 @@ export default class Chart {
   }
 
   drawArea() {
-    const areaData = getAreaData(this.barData)
+    const [areaData, wealth_sum] = getAreaData(this.barData)
     const loss = !areaData.find(([_, y]) => y < 0)
     const mappedAreaData = areaData.map(([x, y]) => (y < 0 ? [x, -y] : [x, y]))
     const yDomain = [0, max(mappedAreaData.map(([_, dollars]) => dollars))]
     const yRange = loss ? [CONFIG.MARGIN.y, CONFIG.HEIGHT - CONFIG.MARGIN.y] : [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y]
     const xLine = scaleLinear([0, 30], [CONFIG.MARGIN.x, CONFIG.WIDTH - CONFIG.MARGIN.x])
     const yLine = scaleLinear(yDomain, yRange)
-    const xAxisLine = loss ? axisTop(xLine).ticks(8).tickSizeOuter(0) : axisBottom(xLine).ticks(8).tickSizeOuter(0)
-    const yAxisLine = axisLeft(yLine).ticks(10).tickFormat(format("$~s")).tickSizeOuter(0)
+    const xAxisLine = loss ? axisTop(xLine).ticks(5).tickSizeOuter(0) : axisBottom(xLine).ticks(8).tickSizeOuter(0)
+    const yAxisLine = axisLeft(yLine).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
+
+    this.areaText
+      .html(`This could accumulate to a ${wealth_sum > 0 ? 'loss' : 'gain'}
+        of $${Math.round(Math.abs(wealth_sum))} in wealth over 30 years
+        if you were to invest this sum today in an index fund like the S&P 500`)
 
     const svg = this.areaSvg
 
@@ -192,7 +239,7 @@ export default class Chart {
       .join('text')
       .attr('class', `${C.X}-${C.AXIS}-${C.LABEL}`)
       .attr('transform', `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT})`)
-      .text('# Years')
+      .text('Years')
 
     // Y-Axis
     svg
@@ -240,6 +287,12 @@ export default class Chart {
       donutData.push({ type: "total_days", value: -gapData * 262 })
       overflowData = []
     }
+
+    this.donutText
+      .html(`You work
+      ${Math.round(262 * gapData)} days
+      ${gapData > 0 ? 'more' : 'less'}
+      than average to earn the same amount`)
 
     const pieGen =
       pie()
@@ -323,6 +376,9 @@ export default class Chart {
 
   drawPercent() {
     const gapData = getPercentData(this.barData)
+    this.percentText
+      .html("which means you earn")
+
     const svg = this.percentSvg
     svg
       .selectAll(`text.${C.PCT}`)
@@ -330,7 +386,8 @@ export default class Chart {
       .join("text")
       .attr("class", `${C.PCT}`)
       .attr("transform", `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`)
-      .html((d) => `${(1 - d).toFixed(2)} cents on the dollar`);
+      .html((d) => `<tspan>${(100 - d * 100).toFixed(0)}</tspan>
+       <tspan>cents on the dollar</tspan>`);
   }
 
   drawBars() {
@@ -339,8 +396,12 @@ export default class Chart {
     const yScale = scaleLinear([0, max(barData.map(([_, { avg_pay_high }]) => avg_pay_high))], [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y])
     const xScale = scaleBand(["You", this.gender], [CONFIG.MARGIN.x, CONFIG.WIDTH - CONFIG.MARGIN.x]).padding(.05)
     const xAxis = axisBottom(xScale).tickSizeOuter(0)
-    const yAxis = axisLeft(yScale).tickFormat(format("$~s")).tickSizeOuter(0)
+    const yAxis = axisLeft(yScale).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
     const colorScale = scaleOrdinal(["You", this.gender], CONFIG.COLOR_RANGE[this.toggleVal.text])
+    const gap = barData[1][1].avg_pay_high - barData[0][1].avg_pay_high
+
+
+    this.barText.html(`You earn $${Math.round(Math.abs(gap))} ${gap > 0 ? 'less' : 'more'} than average`)
     const svg = this.barSvg
 
     svg
@@ -359,7 +420,7 @@ export default class Chart {
       .join('text')
       .attr('class', `${C.X}-${C.AXIS}-${C.LABEL}`)
       .attr('transform', `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT})`)
-      .text('GENDER')
+      .text('Gender')
 
     // Y-Axis
     svg
@@ -377,7 +438,7 @@ export default class Chart {
       .join('text')
       .attr('class', `${C.Y}-${C.AXIS}-${C.LABEL}`)
       .attr('transform', `translate(${20}, ${CONFIG.HEIGHT / 2})rotate(-90)`)
-      .text('YEARLY PAY')
+      .text('Yearly Pay')
 
     svg
       .selectAll(`g.${C.BAR}`)

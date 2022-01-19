@@ -90,8 +90,9 @@ const getAreaData = (data) => {
     [v]: arr[i - 1] || arr[i - 1] === 0 ? t[i - 1] * 1.105 : gap
   }), {})
 
+  const wealth_sum = sum(Object.values(growth))
   const lineData = Object.entries(growth).map(([num, dollars]) => [+num, dollars])
-  return lineData
+  return [lineData, wealth_sum]
 }
 
 export { getBarData, getPercentData, getAreaData }

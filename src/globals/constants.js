@@ -19,7 +19,7 @@ const CONFIG = {
   WIDTH: 400,
   MARGIN: { x: 80, y: 40 },
   COLOR_RANGE: {
-    gray: ["#929292", "#6c6c6c"], color: ["#2D898B",
+    gray: ["#929292", "#464646"], color: ["#2D898B",
       "#6B0F1A"]
   }
 }

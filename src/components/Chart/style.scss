@@ -32,18 +32,29 @@ body {
     font-size: $fontSizeLarge;
     font-weight: 700;
     text-align: center;
+    background-color: $colorPrimary;
+    background-image: linear-gradient(45deg, $colorPrimary, $colorSecondary);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
   }
 
   .dropdown-container {
-    position: relative;
-    // width: 90%;
-
+    margin-top: $spacing;
     display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    padding-bottom: 20px;
   }
 
-  .input-container {
+  .filter-label {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 10px;
+  }
+
+  .input-container, .input-label, .text-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,44 +65,85 @@ body {
       font-family: $fontNormal;
       color: $colorNeutralText;
       height: 20px;
+      max-width: 60px;
       text-transform: capitalize;
-      padding: 0px 30px 0px 30px;
-
-
+      padding: 0px 30px;
     }
 
     input {
       border-radius: 4px 0 0 4px;
-
     }
 
     button {
       border-radius: 0 4px 4px 0;
-
+      padding: 0px 10px;
+      cursor: pointer;
     }
 
   }
 
+  .input-container {
+    margin-bottom: $spacing;
+  }
+
+  .text-wrapper {
+    // text-transform: uppercase;
+    font-weight: 500;
+  }
+
+ /* When the browser is at least 600px and above */
+@media screen and (min-width: 900px) {
+  .grid {
+    /* Apply some styles */
+    grid-template-columns: 1fr 1fr;
+
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+
+  }
+}
+
   .grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     justify-items: center;
     align-items: center;
     font-size: $fontSize;
+    padding-top: 30px;
+    border-top: 1px dashed $colorNeutralDark;
+    gap: 50px;
 
     .y-axis .tick {
       text {
         text-anchor: end;
       }
     }
+
+    .tick text {
+      font-size: $fontSizeSmall;
+      color: $colorNeutralText;
+    }
+
     text {
       font-family: $fontNormal;
-        text-anchor: middle;
+      text-anchor: middle;
+      font-size: $fontSize;
 
       &.pct {
         font-size: 20px;
         text-anchor: middle;
+
+        :first-child {
+          font-size: $fontSizeLarge;
+        }
+
+        :last-child {
+          font-size: $fontSize;
+        }
 
       }
 
@@ -100,6 +152,9 @@ body {
     .wealth-gap {
       stroke: $colorNeutralDark;
       fill: $colorPrimary;
+    }
+    .area-container, .percent-container, .bar-container, .donut-container {
+      text-align: center;
     }
   }
 

@@ -1,20 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@300;500;700&display=swap');
 .data-vis {
+
   &.color {
-    --colorPrimary: "#2D898B";
-    --colorSecondary: "#6B0F1A";
+
+    --colorPrimary: #929292;
+    --colorSecondary: #6c6c6c;
   }
   &:not(.color) {
-    --colorPrimary: "#929292";
-    --colorSecondary: "#6c6c6c";
-
+    --colorPrimary: #2D898B;
+    --colorSecondary: #6B0F1A;
   }
 }
 $fontNormal: 'Mulish', sans-serif;
 
 // TYPOGRAPHY
-$fontSizeSmall: 10px;
-$fontSize: 12px;
+$fontSizeSmall: 12px;
+$fontSize: 14px;
 $fontSizeLarge: 32px;
 
 // COLORS
@@ -22,7 +23,8 @@ $colorNeutralLight: #f2f2f2;
 $colorNeutralMed: #a5a5a5;
 $colorNeutralText: #7f7f7f;
 $colorNeutralDark: #595959;
-$colorPrimary: --colorPrimary;
-$colorSecondary: --colorSecondary;
+$colorPrimary: var(--colorPrimary);
+$colorSecondary: var(--colorSecondary);
+;
 
 $spacing: 10px;
