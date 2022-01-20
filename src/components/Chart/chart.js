@@ -1,13 +1,13 @@
 import {
   select, axisBottom, axisLeft, format, pie, arc, area,
   scaleLinear, scaleBand, scaleOrdinal, max, ascending,
-  curveNatural, axisTop, descending
+  curveNatural, axisTop, descending, timeFormat
 } from 'd3'
 
 // local
 import DropDown from '../Dropdown/dropDown'
 import Toggle from '../Toggle/toggle'
-import { CLASSES as C, CONFIG, EXPERIENCE, FILTERS, REGIONS, TOGGLE_VALS } from '../../globals/constants'
+import { CLASSES as C, CONFIG, EXPERIENCE, FILTERS, REGIONS, TOGGLE_VALS, TEXT } from '../../globals/constants'
 import { getBarData, getPercentData, getAreaData } from '../../globals/helpers'
 
 import './style.scss';
@@ -51,8 +51,14 @@ export default class Chart {
 
     this.selection
       .append("div")
+      .attr("class", "intro")
+      .html(TEXT.INTRO)
+
+    this.selection
+      .append("div")
       .attr("class", "input-label")
       .html("Enter your yearly income")
+
     const inputContainer = this.selection
       .append("div")
       .attr("class", "input-container")
@@ -78,14 +84,14 @@ export default class Chart {
     dropdownContainer
       .append("div")
       .attr("class", "filter-label")
-      .html("Compare to")
+      .html("Compare me to")
     this.genderWrapper = dropdownContainer
       .append("div")
       .attr("class", "filter-wrapper")
     dropdownContainer
       .append("div")
       .attr("class", "filter-label")
-      .html("in")
+      .html("data visualization practitioners in")
     // region dropdown
     this.regionWrapper = dropdownContainer
       .append("div")
@@ -112,44 +118,51 @@ export default class Chart {
     //   .append("div")
     //   .attr("class", "filter-label")
     //   .html("years experience")
+    dropdownContainer
+      .append("div")
+      .attr("class", "filter-label")
+      .html("years of experience")
 
     this.grid = this.selection
       .append("div")
       .attr("class", "grid")
 
+    this.barText = this.grid
+      .append("div")
+      .attr("class", "text-wrapper")
+
     this.barGroup = this.grid
       .append("div")
       .attr("class", "bars")
-
-    this.barText = this.barGroup
-      .append("div")
-      .attr("class", "text-wrapper")
 
     this.barSvg =
       this.barGroup.append("svg")
         .attr("width", CONFIG.WIDTH)
         .attr("height", CONFIG.HEIGHT)
 
+    this.percentText = this.grid
+      .append("div")
+      .attr("class", "text-wrapper")
+
     this.percentGroup = this.grid
       .append("div")
       .attr("class", "percent-container")
 
-    this.percentText = this.percentGroup
+    this.percentDiv = this.percentGroup
+      .append("div")
+    // .attr("width", CONFIG.WIDTH)
+    // .attr("height", CONFIG.HEIGHT)
+
+
+
+
+    this.donutText = this.grid
       .append("div")
       .attr("class", "text-wrapper")
-
-    this.percentSvg = this.percentGroup
-      .append("svg")
-      .attr("width", CONFIG.WIDTH)
-      .attr("height", CONFIG.HEIGHT)
 
     this.donutGroup = this.grid
       .append("div")
       .attr("class", "donut-container")
-
-    this.donutText = this.donutGroup
-      .append("div")
-      .attr("class", "text-wrapper")
 
     this.donutSvg =
       this.donutGroup
@@ -157,19 +170,20 @@ export default class Chart {
         .attr("width", CONFIG.WIDTH)
         .attr("height", CONFIG.HEIGHT)
 
+
+    this.areaText = this.grid
+      .append("div")
+      .attr("class", "text-wrapper")
+
+
     this.areaGroup = this.grid
       .append("div")
       .attr("class", "area-container")
-
-    this.areaText = this.areaGroup
-      .append("div")
-      .attr("class", "text-wrapper")
 
     this.areaSvg = this.areaGroup
       .append("svg")
       .attr("width", CONFIG.WIDTH)
       .attr("height", CONFIG.HEIGHT)
-
 
     this.draw()
 
@@ -177,8 +191,10 @@ export default class Chart {
 
   draw() {
 
+    const [averages, count] = getBarData(this.data, this.region, this.experience, this.gender)
+    this.count = count.length
     // update data
-    this.barData = [['You', { avg_pay_high: this.salary }], ...getBarData(this.data, this.region, this.experience, this.gender)]
+    this.barData = [['You', { avg_pay_high: this.salary }], ...averages]
     this.drawBars()
     this.drawPercent()
     this.drawDonut()
@@ -206,6 +222,7 @@ export default class Chart {
 
   drawArea() {
     const [areaData, wealth_sum] = getAreaData(this.barData)
+    const [gap, gapData] = getPercentData(this.barData)
     const loss = !areaData.find(([_, y]) => y < 0)
     const mappedAreaData = areaData.map(([x, y]) => (y < 0 ? [x, -y] : [x, y]))
     const yDomain = [0, max(mappedAreaData.map(([_, dollars]) => dollars))]
@@ -216,9 +233,12 @@ export default class Chart {
     const yAxisLine = axisLeft(yLine).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
 
     this.areaText
-      .html(`This could accumulate to a ${wealth_sum > 0 ? 'loss' : 'gain'}
-        of $${Math.round(Math.abs(wealth_sum))} in wealth over 30 years
-        if you were to invest this sum today in an index fund like the S&P 500`)
+      .html(`Your pay gap of ${format("($,.0f")(Math.abs(gap))} could accumulate
+        to a ${wealth_sum > 0 ? 'loss' : 'gain'}
+        of ${format("($,.0f")(Math.abs(wealth_sum))} in wealth over 30 years,
+        assuming you invest that amount today in an index fund tracking the S&P 500.
+        This is assuming an inflation adjusted return of 8.29% year over year,
+        as is the historical return of the S&P 500.`)
 
     const svg = this.areaSvg
 
@@ -278,7 +298,11 @@ export default class Chart {
 
   drawDonut() {
     const colorScale = scaleOrdinal(["total_days", "worked_days"], ["#f2f2f2", CONFIG.COLOR_RANGE[this.toggleVal.text][1]])
-    const gapData = getPercentData(this.barData)
+    const [gap, gapData] = getPercentData(this.barData)
+    const days = 365 * gapData
+    const new_year = new Date("1/1/2021")
+    const date = timeFormat("%B %_d")(new Date().setDate(new_year.getDate() + days))
+
     const donutData = [{ type: "worked_days", value: 262 + gapData * 262 }]
     let overflowData = [];
     if (gapData > 0) {
@@ -289,10 +313,12 @@ export default class Chart {
     }
 
     this.donutText
-      .html(`You work
-      ${Math.round(262 * gapData)} days
+      .html(`and you work
+      ${format("(,.0f")(Math.abs(262 * gapData))} days
       ${gapData > 0 ? 'more' : 'less'}
-      than average to earn the same amount`)
+      than the average respondant to earn the same amount.
+      In other words, you
+      ${gapData > 0 ? 'would work for free until' : 'could stop working on'} ${date}.`)
 
     const pieGen =
       pie()
@@ -375,19 +401,19 @@ export default class Chart {
   }
 
   drawPercent() {
-    const gapData = getPercentData(this.barData)
+    const [gap, gapData] = getPercentData(this.barData)
     this.percentText
       .html("which means you earn")
 
-    const svg = this.percentSvg
-    svg
-      .selectAll(`text.${C.PCT}`)
+
+    this.percentDiv
+      .selectAll(`.${C.PCT}`)
       .data([gapData])
-      .join("text")
+      .join("div")
       .attr("class", `${C.PCT}`)
       .attr("transform", `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`)
-      .html((d) => `<tspan>${(100 - d * 100).toFixed(0)}</tspan>
-       <tspan>cents on the dollar</tspan>`);
+      .html((d) => `<div>${(100 - d * 100).toFixed(0)}¢</div>
+       <div>on the dollar</div>`);
   }
 
   drawBars() {
@@ -401,7 +427,12 @@ export default class Chart {
     const gap = barData[1][1].avg_pay_high - barData[0][1].avg_pay_high
 
 
-    this.barText.html(`You earn $${Math.round(Math.abs(gap))} ${gap > 0 ? 'less' : 'more'} than average`)
+    this.barText
+      .html(`<span>You earn</span>
+    <span>${format("($,.0f")(Math.abs(gap))}
+    ${gap > 0 ? 'less' : 'more'}</span>
+    <span>than average salaries of the ${this.count} survey respondants who met your filter criteria. </span>`)
+
     const svg = this.barSvg
 
     svg

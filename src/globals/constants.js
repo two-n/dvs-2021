@@ -46,4 +46,15 @@ const REGIONS = {
 
 const EXPERIENCE = { "2 or less": ["Less than 1 year", "1", "2"], "3-5": ["3", "4", "5"], "6-10": ["6–10"], "10 or more": ["11–15", "16–20", "21–25", "26–30", "More than 30"] }
 
-export { CLASSES, CONFIG, REGIONS, EXPERIENCE, FILTERS, TOGGLE_VALS }
+const TEXT = {
+  INTRO: `The tool below allows you to compare your yearly income to the incomes of those who
+  participated in the Data Visualization Society's 'State of the Data Visualization Industry' 2021 Survey.
+  In total, 2165 survey responses were collected. Of those 2165 respondants, 1539 provided a yearly income.
+  These incomes were provided in a range. In order to calculate the average incomes, I took the higher end
+  of those salary ranges and averaged them across the 1539 respondants. The tool below allows you to further
+  filter these responses by the respondant's gender, region, and level of experience. Enter your yearly income
+  below to see how you compare to the survey respondants.`,
+
+}
+
+export { CLASSES, CONFIG, REGIONS, EXPERIENCE, FILTERS, TOGGLE_VALS, TEXT }

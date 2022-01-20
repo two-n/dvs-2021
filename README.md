@@ -11,7 +11,7 @@ compiles code and starts a developement server at `http://localhost:1234`.
 builds static, compiled filed in `dist` folder. Use `prototypes-build` when building for two-n prototype deployment because it sets the correct base URL to be able to load in the assets.
 
 ### `yarn deploy`
-to deploy to [two-n prototypes site](http://prototypes.two-n.com/dataviz-pay-explorer/).
+to deploy to [two-n prototypes site](http://prototypes.two-n.com/dvs-pay-explorer/).
 
 ### `node ./dataPrep.mjs`
 parses csv file named `data_2021_main.csv` in `./data` folder and creates a json file called `formattedData.json` that is read into `index.js`

@@ -1,5 +1,7 @@
 @import "../../globals/styles/variables";
 
+$border: 1px solid $colorNeutralMed;
+
 * {
   box-sizing: content-box;
 }
@@ -21,7 +23,6 @@ body {
   border: 1px solid $colorNeutralLight;
   font-size: $fontSize;
   display: flex;
-  // text-align: center;
   flex-direction: column;;
   row-gap: 20px;
   padding-top: 30px;
@@ -54,29 +55,39 @@ body {
     margin-right: 10px;
   }
 
-  .input-container, .input-label, .text-wrapper {
+  .input-container, .input-label {
     display: flex;
     justify-content: center;
     align-items: center;
 
     input, button {
-      border: 1px solid $colorNeutralMed;
-      font-size: $fontSize;
+      font-size: $fontSizeNumber;
       font-family: $fontNormal;
       color: $colorNeutralText;
-      height: 20px;
-      max-width: 60px;
+      height: 36px;
+      max-width: 120px;
       text-transform: capitalize;
       padding: 0px 30px;
     }
 
     input {
       border-radius: 4px 0 0 4px;
+      border-left: $border;
+      border-top: $border;
+      border-bottom: $border;
+      border-right: none;
     }
 
     button {
       border-radius: 0 4px 4px 0;
+      border-left: none;
+      border-top: $border;
+      border-bottom: $border;
+      border-right: $border;
+      background-color: white;
       padding: 0px 10px;
+      color: $colorNeutralMed;
+
       cursor: pointer;
     }
 
@@ -88,7 +99,16 @@ body {
 
   .text-wrapper {
     // text-transform: uppercase;
+    text-align: center;
     font-weight: 500;
+  }
+
+  .intro {
+    // text-transform: uppercase;
+    text-align: center;
+    font-weight: 500;
+    font-size: $fontSizeSmall;
+    margin-bottom: $spacing;
   }
 
  /* When the browser is at least 600px and above */
@@ -109,13 +129,13 @@ body {
 
   .grid {
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr;
     justify-items: center;
     align-items: center;
     font-size: $fontSize;
     padding-top: 30px;
     border-top: 1px dashed $colorNeutralDark;
-    gap: 50px;
+    gap: 70px;
 
     .y-axis .tick {
       text {
@@ -132,19 +152,30 @@ body {
       font-family: $fontNormal;
       text-anchor: middle;
       font-size: $fontSize;
+    }
 
-      &.pct {
-        font-size: 20px;
-        text-anchor: middle;
+    .pct {
+      // font-size: 20px;
+      // text-anchor: middle;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      :first-child {
+        display: flex;
+        align-items: center;
+        font-weight: 700;
+        justify-content: center;
+        font-size: $fontSizeLarge;
+        border: 3px solid $colorNeutralDark;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+      }
 
-        :first-child {
-          font-size: $fontSizeLarge;
-        }
-
-        :last-child {
-          font-size: $fontSize;
-        }
-
+      :last-child {
+        margin-top: $spacing;
+        font-size: $fontSize;
       }
 
     }
