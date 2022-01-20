@@ -277,14 +277,14 @@ export default class Chart {
       .transition()
       .call(yAxisLine)
 
-    svg
-      .selectAll(`text.${C.Y}-${C.AXIS}-${C.LABEL}`)
-      .data([0])
-      .join('text')
-      .attr('class', `${C.Y}-${C.AXIS}-${C.LABEL}`)
-      .attr('transform', `translate(0, ${CONFIG.HEIGHT / 2})rotate(-90)`)
-      .attr("text-anchor", "middle")
-      .text('TOTAL')
+    // svg
+    //   .selectAll(`text.${C.Y}-${C.AXIS}-${C.LABEL}`)
+    //   .data([0])
+    //   .join('text')
+    //   .attr('class', `${C.Y}-${C.AXIS}-${C.LABEL}`)
+    //   .attr('transform', `translate(0, ${CONFIG.HEIGHT / 2})rotate(-90)`)
+    //   .attr("text-anchor", "middle")
+    //   .text('TOTAL')
 
     const areaGenerator =
       area()
@@ -327,6 +327,11 @@ export default class Chart {
       ${gapData > 0 ? 'would work for free until' : 'could stop working on'}
       <strong>${date}.</strong>`)
 
+    const labelGen =
+      pie()
+        // An accessor to tell the pie where to find the data values
+        .value((d) => d.value)
+
     const pieGen =
       pie()
         // An accessor to tell the pie where to find the data values
@@ -365,6 +370,43 @@ export default class Chart {
           .transition()
           .style("fill", (d, i) => colorScale(d.data.type))
       )
+
+    const labelData = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"].map((d) => ({ type: d, value: 1 }))
+    svg
+      .selectAll("g.label-donut")
+      .data([labelData])
+      .join("g")
+      .attr("class", "label-donut")
+      .attr(
+        "transform",
+        `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`
+      )
+      .call((g) =>
+        g
+          .selectAll("text.label-donut")
+          .data((d) => labelGen(d))
+          .join("text")
+          .attr("class", "label-donut")
+          .attr('transform', (d, i) => `translate(${arcGen(140).centroid(d)})`)
+          .attr('text-anchor', 'middle')
+          .text(({ data }) => data.type)
+          .attr('d', d => console.log(d))
+
+        // .style("stroke-width", 0.7)
+
+        // .transition()
+        // .attr("d", d => arcGen(120)(d))
+        // .transition()
+        // .style("fill", (d, i) => colorScale(d.data.type))
+      )
+    // .join('text')
+    // // We use the label arcs here to get their centroid
+    // // a centroid is the center point of a shape (in this case the arc)
+    // // remember that our label arc has the same inner and outer radius
+    // // so the arc is centered just outside the radius of our donut.
+    // // Refer back to the labelArcs setup and think about that for a minute!
+    // .attr('transform', d => `translate(${ labelArcs.centroid(d) })`)
+    // .attr('text-anchor', 'middle')
 
     const donutGroup = svg
       .selectAll("g.donuts")
@@ -405,6 +447,7 @@ export default class Chart {
         // .duration(500)
         // .attr("opacity", 0)
       )
+
   }
 
   drawPercent() {
@@ -419,8 +462,8 @@ export default class Chart {
       .join("div")
       .attr("class", `${C.PCT}`)
       .attr("transform", `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`)
-      .html((d) => `<div>${(100 - d * 100).toFixed(0)}¢</div>
-       <div>on the dollar</div>`);
+      .html((d) => `<div> ${(100 - d * 100).toFixed(0)} ¢</div>
+  <div class="pct-label">on the dollar</div>`);
   }
 
   drawBars() {
@@ -435,7 +478,7 @@ export default class Chart {
 
 
     this.barText
-      .html(`<span>You earn</span>
+      .html(`<span>You earn</span >
     <strong>${format("($,.0f")(Math.abs(gap))}
     ${gap > 0 ? 'less' : 'more'}</strong>
     <span>than average salaries of the <strong>${this.count}</strong>
@@ -444,10 +487,10 @@ export default class Chart {
     const svg = this.barSvg
 
     svg
-      .selectAll(`g.${C.X}-${C.AXIS}`)
+      .selectAll(`g.${C.X}-${C.AXIS} `)
       .data([0])
       .join('g')
-      .attr('class', `${C.X}-${C.AXIS}`)
+      .attr('class', `${C.X}-${C.AXIS} `)
       .attr('transform', `translate(${0}, ${CONFIG.HEIGHT - CONFIG.MARGIN.y})`)
       .transition()
       .call(xAxis)
@@ -463,32 +506,32 @@ export default class Chart {
 
     // Y-Axis
     svg
-      .selectAll(`g.${C.Y}-${C.AXIS}`)
+      .selectAll(`g.${C.Y}-${C.AXIS} `)
       .data([0])
       .join('g')
-      .attr('class', `${C.Y}-${C.AXIS}`)
+      .attr('class', `${C.Y}-${C.AXIS} `)
       .attr('transform', `translate(${CONFIG.MARGIN.x}, 0)`)
       .transition()
       .call(yAxis)
 
     svg
-      .selectAll(`text.${C.Y}-${C.AXIS}-${C.LABEL}`)
+      .selectAll(`text.${C.Y}-${C.AXIS}-${C.LABEL} `)
       .data([0])
       .join('text')
-      .attr('class', `${C.Y}-${C.AXIS}-${C.LABEL}`)
+      .attr('class', `${C.Y}-${C.AXIS}-${C.LABEL} `)
       .attr('transform', `translate(${20}, ${CONFIG.HEIGHT / 2})rotate(-90)`)
       .text('Yearly Pay')
 
     svg
-      .selectAll(`g.${C.BAR}`)
+      .selectAll(`g.${C.BAR} `)
       .data(barData)
       .join("g")
-      .attr("class", `${C.BAR}`)
+      .attr("class", `${C.BAR} `)
       .attr("transform", ([gender]) => `translate(${xScale(gender)}, ${0})`)
-      .selectAll(`rect.${C.BAR}`)
+      .selectAll(`rect.${C.BAR} `)
       .data((d) => [d])
       .join("rect")
-      .attr("class", `${C.BAR}`)
+      .attr("class", `${C.BAR} `)
       .attr("width", xScale.bandwidth())
       .attr("y", ([, { avg_pay_high }]) => yScale(avg_pay_high))
       .attr(

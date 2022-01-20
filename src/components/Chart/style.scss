@@ -3,7 +3,7 @@
 $border: 1px solid $colorNeutralMed;
 
 * {
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
 body {
@@ -27,7 +27,6 @@ body {
   width: 80%;
   min-height: 100vh;
   margin: 0 auto;
-  border: 1px solid $colorNeutralLight;
   font-size: $fontSize;
   display: flex;
   flex-direction: column;;
@@ -128,28 +127,6 @@ body {
     margin-bottom: $spacing;
   }
 
- /* When the browser is at least 600px and above */
-@media screen and (min-width: 900px) {
-  .grid {
-    /* Apply some styles */
-    grid-template-columns: 1fr 1fr;
-
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .grid {
-    grid-template-columns: 1fr;
-
-  }
-
-  .filter-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-}
-
   .grid {
     display: grid;
     grid-template-rows: 1fr;
@@ -160,12 +137,6 @@ body {
     border-top: 1px dashed $colorNeutralDark;
     gap: 70px;
 
-    .y-axis .tick {
-      text {
-        text-anchor: end;
-      }
-    }
-
     .tick text {
       font-size: $fontSizeSmall;
       color: $colorNeutralText;
@@ -173,13 +144,10 @@ body {
 
     text {
       font-family: $fontNormal;
-      text-anchor: middle;
       font-size: $fontSize;
     }
 
     .pct {
-      // font-size: 20px;
-      // text-anchor: middle;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -189,8 +157,8 @@ body {
         align-items: center;
         font-weight: 700;
         justify-content: center;
-        font-size: $fontSizeLarge;
-        border: 3px solid $colorNeutralDark;
+        font-size: 40px;
+        border: 10px solid $colorNeutralDark;
         width: 200px;
         height: 200px;
         border-radius: 50%;
@@ -211,7 +179,40 @@ body {
       text-align: center;
     }
 
+    .donut-container  {
+      text-anchor: middle;
+    }
+
+    .y-axis-label, .x-axis-label, .label-donut, .pct-label  {
+      text-anchor: middle;
+      fill: $colorNeutralText;
+      text-transform: uppercase;
+      font-size: $fontSizeSmall;
+    }
+
 
   }
+
+   /* When the browser is at least 600px and above */
+@media screen and (min-width: 900px) {
+  .grid {
+    /* Apply some styles */
+    grid-template-columns: 1fr 1fr;
+
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+
+  }
+
+  .filter-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
 
 }
