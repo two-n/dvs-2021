@@ -1,7 +1,7 @@
 import {
   select, axisBottom, axisLeft, format, pie, arc, area,
   scaleLinear, scaleBand, scaleOrdinal, max, ascending,
-  curveNatural, axisTop, descending, timeFormat
+  curveNatural, axisTop, descending, timeFormat, curveBasis, curveCardinal
 } from 'd3'
 
 // local
@@ -187,7 +187,7 @@ export default class Chart {
 
     const footer = this.selection
       .append("div")
-      .attr("class", "footer")
+    // .attr("class", "footer")
 
     footer.append("div")
       .html("link to survey")
@@ -223,7 +223,7 @@ export default class Chart {
     new DropDown(this.experienceWrapper,
       Object.keys(EXPERIENCE),
       this.experience,
-      d => this.handleFilter(d, FILTERS.EXPERIENCE));
+      d => this.handleFilter(d, FILTERS.EXPERIENCE), false);
   }
 
   drawArea() {
@@ -277,18 +277,8 @@ export default class Chart {
       .transition()
       .call(yAxisLine)
 
-    // svg
-    //   .selectAll(`text.${C.Y}-${C.AXIS}-${C.LABEL}`)
-    //   .data([0])
-    //   .join('text')
-    //   .attr('class', `${C.Y}-${C.AXIS}-${C.LABEL}`)
-    //   .attr('transform', `translate(0, ${CONFIG.HEIGHT / 2})rotate(-90)`)
-    //   .attr("text-anchor", "middle")
-    //   .text('TOTAL')
-
     const areaGenerator =
       area()
-        .curve(curveNatural)
         .x(([x]) => xLine(x))
         .y0(yLine(0))
         .y1(([_, y]) => yLine(y))
@@ -342,6 +332,7 @@ export default class Chart {
       arc()
         .innerRadius(donutRadius)
         .outerRadius(donutRadius - 14)
+        .cornerRadius(10);
 
     const svg = this.donutSvg
 
@@ -359,19 +350,15 @@ export default class Chart {
           .selectAll("path.inner_donut")
           .data((d) => pieGen(d))
           .join("path")
-          .attr("class", "inner_donut")
-          .style("stroke", (d, i) => {
-            return colorScale(d.data.type)
-          })
-          // .style("stroke-width", 0.7)
-
-          // .transition()
-          .attr("d", d => arcGen(80)(d))
-          .transition()
           .style("fill", (d, i) => colorScale(d.data.type))
+          .attr("class", "inner_donut")
+          .transition()
+          .attr("d", d => arcGen(80)(d))
       )
 
-    const labelData = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"].map((d) => ({ type: d, value: 1 }))
+    const labelData =
+      ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+        .map((d) => ({ type: d, value: 1 }))
     svg
       .selectAll("g.label-donut")
       .data([labelData])
@@ -390,23 +377,9 @@ export default class Chart {
           .attr('transform', (d, i) => `translate(${arcGen(140).centroid(d)})`)
           .attr('text-anchor', 'middle')
           .text(({ data }) => data.type)
-          .attr('d', d => console.log(d))
 
-        // .style("stroke-width", 0.7)
-
-        // .transition()
-        // .attr("d", d => arcGen(120)(d))
-        // .transition()
-        // .style("fill", (d, i) => colorScale(d.data.type))
       )
-    // .join('text')
-    // // We use the label arcs here to get their centroid
-    // // a centroid is the center point of a shape (in this case the arc)
-    // // remember that our label arc has the same inner and outer radius
-    // // so the arc is centered just outside the radius of our donut.
-    // // Refer back to the labelArcs setup and think about that for a minute!
-    // .attr('transform', d => `translate(${ labelArcs.centroid(d) })`)
-    // .attr('text-anchor', 'middle')
+
 
     const donutGroup = svg
       .selectAll("g.donuts")
@@ -423,15 +396,9 @@ export default class Chart {
           .data((d) => pieGen(d))
           .join("path")
           .attr("class", "outer_donut")
-          .style("stroke", (d, i) => {
-            return colorScale(d.data.type)
-          })
-          // .style("stroke-width", 0.7)
-
-          // .transition()
-          .attr("d", d => arcGen(100)(d))
-          .transition()
           .style("fill", (d, i) => colorScale(d.data.type))
+          .transition()
+          .attr("d", d => arcGen(100)(d))
       )
 
       .call((g) =>
@@ -532,7 +499,9 @@ export default class Chart {
       .data((d) => [d])
       .join("rect")
       .attr("class", `${C.BAR} `)
+      .attr("rx", 5)
       .attr("width", xScale.bandwidth())
+      .transition()
       .attr("y", ([, { avg_pay_high }]) => yScale(avg_pay_high))
       .attr(
         "height",

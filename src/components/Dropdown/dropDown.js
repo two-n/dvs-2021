@@ -3,14 +3,14 @@ import { select } from 'd3'
 import './style.scss';
 
 export default class DropDown {
-  constructor(parent, options, selected, callback) {
+  constructor(parent, options, selected, callback, sort = true) {
 
     this.parent = parent;
     this.selected = selected;
     this.options = options;
     this.callback = callback;
     // sort options alphabetically and bring selected option to front
-    this.options.sort((a, b) => a == selected ? -1 : b == selected ? 1 : a > b ? 1 : -1);
+    if (sort) this.options.sort((a, b) => a == selected ? -1 : b == selected ? 1 : a > b ? 1 : -1);
 
     this.el = this.parent
       .selectAll(`div.${C.FILTER}`)
