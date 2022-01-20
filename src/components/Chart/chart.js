@@ -185,12 +185,18 @@ export default class Chart {
       .attr("width", CONFIG.WIDTH)
       .attr("height", CONFIG.HEIGHT)
 
+    const footer = this.selection
+      .append("div")
+      .attr("class", "footer")
+
+    footer.append("div")
+      .html("link to survey")
+
     this.draw()
 
   }
 
   draw() {
-
     const [averages, count] = getBarData(this.data, this.region, this.experience, this.gender)
     this.count = count.length
     // update data
@@ -233,9 +239,9 @@ export default class Chart {
     const yAxisLine = axisLeft(yLine).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
 
     this.areaText
-      .html(`Your pay gap of ${format("($,.0f")(Math.abs(gap))} could accumulate
-        to a ${wealth_sum > 0 ? 'loss' : 'gain'}
-        of ${format("($,.0f")(Math.abs(wealth_sum))} in wealth over 30 years,
+      .html(`Your pay gap of <strong>${format("($,.0f")(Math.abs(gap))}</strong> could accumulate
+        to a <strong>${wealth_sum > 0 ? 'loss' : 'gain'}
+        of ${format("($,.0f")(Math.abs(wealth_sum))}</strong> in wealth over 30 years,
         assuming you invest that amount today in an index fund tracking the S&P 500.
         This is assuming an inflation adjusted return of 8.29% year over year,
         as is the historical return of the S&P 500.`)
@@ -314,11 +320,12 @@ export default class Chart {
 
     this.donutText
       .html(`and you work
-      ${format("(,.0f")(Math.abs(262 * gapData))} days
+      <strong>${format("(,.0f")(Math.abs(262 * gapData))} days </strong>
       ${gapData > 0 ? 'more' : 'less'}
       than the average respondant to earn the same amount.
       In other words, you
-      ${gapData > 0 ? 'would work for free until' : 'could stop working on'} ${date}.`)
+      ${gapData > 0 ? 'would work for free until' : 'could stop working on'}
+      <strong>${date}.</strong>`)
 
     const pieGen =
       pie()
@@ -429,9 +436,10 @@ export default class Chart {
 
     this.barText
       .html(`<span>You earn</span>
-    <span>${format("($,.0f")(Math.abs(gap))}
-    ${gap > 0 ? 'less' : 'more'}</span>
-    <span>than average salaries of the ${this.count} survey respondants who met your filter criteria. </span>`)
+    <strong>${format("($,.0f")(Math.abs(gap))}
+    ${gap > 0 ? 'less' : 'more'}</strong>
+    <span>than average salaries of the <strong>${this.count}</strong>
+    survey respondants who met your filter criteria. </span>`)
 
     const svg = this.barSvg
 
