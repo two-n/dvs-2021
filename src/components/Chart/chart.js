@@ -247,7 +247,7 @@ export default class Chart {
     const mappedAreaData = areaData.map(([x, y]) => (y < 0 ? [x, -y] : [x, y]))
     const yDomain = [0, max(mappedAreaData.map(([_, dollars]) => dollars))]
     const yRange = loss ? [CONFIG.MARGIN.y, CONFIG.HEIGHT - CONFIG.MARGIN.y] : [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y]
-    const xLine = scaleLinear([0, 30], [CONFIG.MARGIN.x, this.WIDTH - CONFIG.MARGIN.x])
+    const xLine = scaleLinear([1, 30], [CONFIG.MARGIN.x, this.WIDTH - CONFIG.MARGIN.x])
     const yLine = scaleLinear(yDomain, yRange)
     const xAxisLine = loss ? axisTop(xLine).ticks(5).tickSizeOuter(0) : axisBottom(xLine).ticks(8).tickSizeOuter(0).tickPadding(14)
     const yAxisLine = axisLeft(yLine).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)

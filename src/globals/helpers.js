@@ -81,9 +81,9 @@ const getPercentData = (data) => {
 }
 const getAreaData = (data) => {
   const gap = data[1][1].avg_pay_high - data[0][1].avg_pay_high
-  const growth = [...range(1, 31).keys()].reduce((t, v, i, arr) => ({
+  const growth = [...range(1, 31)].reduce((t, v) => ({
     ...t,
-    [v]: arr[i - 1] || arr[i - 1] === 0 ? t[i - 1] * 1.0829 : gap
+    [v]: t[v - 1] ? t[v - 1] * 1.0829 : gap
   }), {})
 
   const wealth_sum = sum(Object.values(growth))
