@@ -63,9 +63,11 @@ export default class Chart {
       .append("div")
       .attr("class", "input-container")
 
+
     inputContainer
       .append("input")
       .attr("value", this.salary)
+      .attr("type", "number")
       .on("change", (e) => {
         e.stopPropagation();
         this.salary = +e.target.value.trim().replace(/,/, "")
