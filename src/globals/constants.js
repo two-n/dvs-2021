@@ -34,6 +34,7 @@ const FILTERS = {
 const TOGGLE_VALS = [{ text: "color", val: false }, { text: "gray", val: true }]
 
 const REGIONS = {
+  "All": "All",
   Europe: ["Russia", "United Kingdom", "Germany", "Switzerland", "Sweden", "Netherlands", "Ireland", "Italy", "Spain", "France", "Finland", "Lithuania", "Hungary", "Portugal", "Albania", "Poland", "Czech Republic (Czechia)", "Slovenia", "Bulgaria", "Greece", "Denmark", "Belgium", "Croatia", "Austria", "Cyprus", "Romania", "North Macedonia", "Georgia", "Luxembourg", "Norway", "Ukraine", "Armenia", "Belarus", "Serbia", "Iceland"
   ],
   "US & Canada": ["United States", "Canada"],
@@ -41,10 +42,12 @@ const REGIONS = {
   "Australia & Oceania": ["Australia", "New Zealand"],
   "Central, South & East Asia": ["China", "India", "Thailand", "Singapore", "Taiwan", "Kazakhstan", "Vietnam", "Philippines", "Japan", "Nepal", "Sri Lanka", "Bangladesh", "Indonesia", "Malaysia", "Pakistan"],
   "Middle East": ["Israel", "Turkey", "Afghanistan", "United Arab Emirates", "Iran"],
-  "Africa": ["Uganda", "South Africa", "Nigeria", "South Sudan", "Rwanda", "Zambia", "Egypt", "Kenya", "Ghana", "Tanzania", "Sudan", "Morocco"]
+  "Africa": ["Uganda", "South Africa", "Nigeria", "South Sudan", "Rwanda", "Zambia", "Egypt", "Kenya", "Ghana", "Tanzania", "Sudan", "Morocco"],
+
 }
 
-const EXPERIENCE = { "2 or less": ["Less than 1 year", "1", "2"], "3-5": ["3", "4", "5"], "6-10": ["6–10"], "10 or more": ["11–15", "16–20", "21–25", "26–30", "More than 30"] }
+const EXPERIENCE = { "All": "All", "2 or less": ["Less than 1 year", "1", "2"], "3-5": ["3", "4", "5"], "6-10": ["6–10"], "11 or more": ["11–15", "16–20", "21–25", "26–30", "More than 30"] }
+const GENDERS = ["All Genders", "Female", "Male", "Self-described"]
 
 const TEXT = {
   INTRO: `The tool below allows you to compare your yearly income to the incomes of those who
@@ -54,7 +57,8 @@ const TEXT = {
   of those salary ranges and averaged them across the 1539 respondants. The tool below allows you to further
   filter these responses by the respondant's gender, region, and level of experience. Enter your yearly income
   below to see how you compare to the survey respondants.`,
+  EMPTY: "Sorry, there is no data for your selected filters."
 
 }
 
-export { CLASSES, CONFIG, REGIONS, EXPERIENCE, FILTERS, TOGGLE_VALS, TEXT }
+export { CLASSES, CONFIG, REGIONS, EXPERIENCE, GENDERS, FILTERS, TOGGLE_VALS, TEXT }

@@ -7,7 +7,7 @@ import {
 // local
 import DropDown from '../Dropdown/dropDown'
 import Toggle from '../Toggle/toggle'
-import { CLASSES as C, CONFIG, EXPERIENCE, FILTERS, REGIONS, TOGGLE_VALS, TEXT } from '../../globals/constants'
+import { CLASSES as C, CONFIG, EXPERIENCE, FILTERS, REGIONS, TOGGLE_VALS, TEXT, GENDERS } from '../../globals/constants'
 import { getBarData, getPercentData, getAreaData } from '../../globals/helpers'
 
 import './style.scss';
@@ -21,7 +21,7 @@ export default class Chart {
 
     // filters
     this.region = Object.keys(REGIONS)[0]
-    this.gender = "Female"
+    this.gender = GENDERS[0]
     this.education = "B.A."
     this.experience = Object.keys(EXPERIENCE)[0]
     this.salary = 30000
@@ -187,6 +187,11 @@ export default class Chart {
       .attr("width", CONFIG.WIDTH)
       .attr("height", CONFIG.HEIGHT)
 
+    this.empty = this.selection
+      .append("div")
+      .attr("class", "empty")
+      .html(TEXT.EMPTY)
+
     const footer = this.selection
       .append("div")
     // .attr("class", "footer")
@@ -201,12 +206,20 @@ export default class Chart {
   draw() {
     const [averages, count] = getBarData(this.data, this.region, this.experience, this.gender)
     this.count = count.length
+    console.log('averages', averages)
     // update data
-    this.barData = [['You', { avg_pay_high: this.salary }], ...averages]
-    this.drawBars()
-    this.drawPercent()
-    this.drawDonut()
-    this.drawArea()
+    this.grid.classed("hidden", !averages.length)
+    this.empty.classed("hidden", averages.length)
+
+    if (averages.length) {
+      this.barData = [['You', { avg_pay_high: this.salary }], ...averages]
+      this.drawBars()
+      this.drawPercent()
+      this.drawDonut()
+      this.drawArea()
+    } else {
+
+    }
     this.drawDropdowns()
 
   }
@@ -218,7 +231,7 @@ export default class Chart {
       d => this.handleFilter(d, FILTERS.REGION));
 
     new DropDown(this.genderWrapper,
-      ["Female", "Male", "Self-described"],
+      GENDERS,
       this.gender,
       d => this.handleFilter(d, FILTERS.GENDER));
 
@@ -443,8 +456,8 @@ export default class Chart {
     const xAxis = axisBottom(xScale).tickSizeOuter(0)
     const yAxis = axisLeft(yScale).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
     const colorScale = scaleOrdinal(["You", this.gender], CONFIG.COLOR_RANGE[this.toggleVal.text])
-    const gap = barData[1][1].avg_pay_high - barData[0][1].avg_pay_high
-
+    const [gap] = getPercentData(barData)
+    console.log(barData)
 
     this.barText
       .html(`<span>You earn</span >
@@ -496,7 +509,8 @@ export default class Chart {
       .data(barData)
       .join("g")
       .attr("class", `${C.BAR} `)
-      .attr("transform", ([gender]) => `translate(${xScale(gender)}, ${0})`)
+      .attr("transform", ([gender]) => `translate(${xScale(gender)}, ${0})`
+      )
       .selectAll(`rect.${C.BAR} `)
       .data((d) => [d])
       .join("rect")

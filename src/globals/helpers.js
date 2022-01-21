@@ -10,29 +10,28 @@ const getBarData = (data, currentRegion, yearsDVExp, currentGender) => {
       YearsDVExperience,
       YearsWorkExperience,
       Gender_summarized,
+      PayAnnual,
       ...d
     }) =>
-      REGIONS[currentRegion].includes(Loc1Country) &&
-      EXPERIENCE[yearsDVExp].includes(YearsDVExperience) &&
-      currentGender === Gender_summarized
+      PayAnnual && PayAnnual !== "I am not compensated on a yearly basis" &&
+      (currentRegion === "All" || REGIONS[currentRegion].includes(Loc1Country)) &&
+      (yearsDVExp === "All" || EXPERIENCE[yearsDVExp].includes(YearsDVExperience)) &&
+      (currentGender === "All Genders" || currentGender === Gender_summarized)
   )
 
-
-  const distribution = [...group(people, (d) => d.Gender_summarized).entries()].map(
+  const genders = currentGender === "All Genders" ? [["All Genders", people]] : [...group(people, (d) => d.Gender_summarized).entries()]
+  const distribution = genders.map(
     ([k, v]) => [
       k,
-
       rollups(
         v,
         (c) => c.length,
         (d) => d.PayAnnual
       )
-        .filter(
-          ([range, num]) =>
-            range && range !== "I am not compensated on a yearly basis"
-        )
     ]
   )
+
+  console.log(distribution)
 
   const payAverages = distribution.map(([gender, data]) => [
     gender,

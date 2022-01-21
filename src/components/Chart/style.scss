@@ -16,6 +16,21 @@ body {
   background-color: $colorNeutralLight;
 }
 
+.empty {
+  &.hidden {
+    display: none;
+  }
+  &:not(.hidden){
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: $spacing;
+    font-size: $fontSizeNumber;
+    font-weight: 700;
+    height: 100px;
+  }
+}
+
 .footer {
   width: 100%;
   min-height: 100px;
@@ -127,13 +142,11 @@ body {
   }
 
   .text-wrapper {
-    // text-transform: uppercase;
     text-align: center;
     font-weight: 500;
   }
 
   .intro {
-    // text-transform: uppercase;
     text-align: center;
     font-weight: 500;
     font-size: $fontSizeSmall;
@@ -141,7 +154,6 @@ body {
   }
 
   .grid {
-    display: grid;
     grid-template-rows: 1fr;
     justify-items: center;
     align-items: center;
@@ -149,6 +161,15 @@ body {
     padding-top: 30px;
     border-top: 1px dashed $colorNeutralDark;
     gap: 70px;
+
+    &.hidden {
+      display: none;
+      height: 0;
+    }
+
+    &:not(.hidden) {
+       display: grid;
+    }
 
     .tick text {
       font-size: $fontSizeSmall;
