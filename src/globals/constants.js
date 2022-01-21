@@ -34,19 +34,19 @@ const FILTERS = {
 const TOGGLE_VALS = [{ text: "color", val: false }, { text: "gray", val: true }]
 
 const REGIONS = {
-  "All": "All",
+  "All Regions": "All",
   Europe: ["Russia", "United Kingdom", "Germany", "Switzerland", "Sweden", "Netherlands", "Ireland", "Italy", "Spain", "France", "Finland", "Lithuania", "Hungary", "Portugal", "Albania", "Poland", "Czech Republic (Czechia)", "Slovenia", "Bulgaria", "Greece", "Denmark", "Belgium", "Croatia", "Austria", "Cyprus", "Romania", "North Macedonia", "Georgia", "Luxembourg", "Norway", "Ukraine", "Armenia", "Belarus", "Serbia", "Iceland"
   ],
   "US & Canada": ["United States", "Canada"],
-  "Central & South America & Carribean": ["Mexico", "Brazil", "Chile", "Colombia", "Peru", "Ecuador", "Argentina", "Guatemala", "Paraguay", "Trinidad and Tobago", "Dominican Republic"],
+  "Latin America": ["Mexico", "Brazil", "Chile", "Colombia", "Peru", "Ecuador", "Argentina", "Guatemala", "Paraguay", "Trinidad and Tobago", "Dominican Republic"],
   "Australia & Oceania": ["Australia", "New Zealand"],
-  "Central, South & East Asia": ["China", "India", "Thailand", "Singapore", "Taiwan", "Kazakhstan", "Vietnam", "Philippines", "Japan", "Nepal", "Sri Lanka", "Bangladesh", "Indonesia", "Malaysia", "Pakistan"],
+  "asia": ["China", "India", "Thailand", "Singapore", "Taiwan", "Kazakhstan", "Vietnam", "Philippines", "Japan", "Nepal", "Sri Lanka", "Bangladesh", "Indonesia", "Malaysia", "Pakistan"],
   "Middle East": ["Israel", "Turkey", "Afghanistan", "United Arab Emirates", "Iran"],
   "Africa": ["Uganda", "South Africa", "Nigeria", "South Sudan", "Rwanda", "Zambia", "Egypt", "Kenya", "Ghana", "Tanzania", "Sudan", "Morocco"],
 
 }
 
-const EXPERIENCE = { "All": "All", "2 or less": ["Less than 1 year", "1", "2"], "3-5": ["3", "4", "5"], "6-10": ["6–10"], "11 or more": ["11–15", "16–20", "21–25", "26–30", "More than 30"] }
+const EXPERIENCE = { "Any": "All", "2 or less": ["Less than 1 year", "1", "2"], "3-5": ["3", "4", "5"], "6-10": ["6–10"], "11 or more": ["11–15", "16–20", "21–25", "26–30", "More than 30"] }
 const GENDERS = ["All Genders", "Female", "Male", "Self-described"]
 
 const TEXT = {

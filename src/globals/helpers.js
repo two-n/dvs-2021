@@ -14,8 +14,8 @@ const getBarData = (data, currentRegion, yearsDVExp, currentGender) => {
       ...d
     }) =>
       PayAnnual && PayAnnual !== "I am not compensated on a yearly basis" &&
-      (currentRegion === "All" || REGIONS[currentRegion].includes(Loc1Country)) &&
-      (yearsDVExp === "All" || EXPERIENCE[yearsDVExp].includes(YearsDVExperience)) &&
+      (currentRegion === "All Regions" || REGIONS[currentRegion].includes(Loc1Country)) &&
+      (yearsDVExp === "Any" || EXPERIENCE[yearsDVExp].includes(YearsDVExperience)) &&
       (currentGender === "All Genders" || currentGender === Gender_summarized)
   )
 

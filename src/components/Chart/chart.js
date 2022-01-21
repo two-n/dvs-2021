@@ -197,8 +197,8 @@ export default class Chart {
       .append("div")
     // .attr("class", "footer")
 
-    footer.append("div")
-      .html("link to survey")
+    // footer.append("div")
+    //   .html("link to survey")
 
     this.WIDTH = select('.bar-container').node().getBoundingClientRect().width
 
@@ -342,11 +342,14 @@ export default class Chart {
         // An accessor to tell the pie where to find the data values
         .value((d) => d.value)
         .sort((a, b) => descending(a.type, b.type))
+        .padAngle(0.02)
 
-    const arcGen = (donutRadius) =>
+
+    const arcGen = (donutRadius, space = 10) =>
       arc()
         .innerRadius(donutRadius)
-        .outerRadius(donutRadius - 14)
+        .outerRadius(donutRadius - space)
+        // .padAngle(10)
         .cornerRadius(10);
 
     const svg = this.donutSvg
@@ -389,10 +392,19 @@ export default class Chart {
           .data((d) => labelGen(d))
           .join("text")
           .attr("class", "label-donut")
-          .attr('transform', (d, i) => `translate(${arcGen(140).centroid(d)})`)
+          .attr('transform', (d, i) => `translate(${arcGen(150).centroid(d)})`)
           .attr('text-anchor', 'middle')
           .text(({ data }) => data.type)
 
+      )
+      .call((g) =>
+        g
+          .selectAll("path.label-donut")
+          .data((d) => pieGen(d))
+          .join("path")
+          .attr("class", "label-donut")
+          .transition()
+          .attr("d", d => arcGen(120, 5, 10)(d))
       )
 
 
@@ -485,12 +497,13 @@ export default class Chart {
     const colorScale = scaleOrdinal(["You", this.gender], CONFIG.COLOR_RANGE[this.toggleVal.text])
     const [gap] = getPercentData(barData)
 
+
     this.barText
       .html(`<span> You earn</span >
     <strong>${format("($,.0f")(Math.abs(gap))}
     ${gap > 0 ? 'less' : 'more'}</strong>
-    <span>than average salaries of the <strong>${this.count}</strong>
-    survey respondants who met your filter criteria. </span>`)
+    <span>than average income of the <strong>${this.count}</strong>
+    survey respondants who met your filter criteria. The average income is ${format("($,.0f")(barData[1][1].avg_pay_high)}.</span>`)
 
     const svg = this.barSvg
 
