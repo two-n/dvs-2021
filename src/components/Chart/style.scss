@@ -1,6 +1,6 @@
 @import "../../globals/styles/variables";
 
-$border: 1px solid $colorNeutralMed;
+$border: 2px solid $colorPrimary;
 
 * {
   box-sizing: border-box;
@@ -90,15 +90,16 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-transform: uppercase;
 
     input, button {
       font-size: $fontSizeNumber;
       font-family: $fontNormal;
       color: $colorNeutralText;
       height: 36px;
-      max-width: 120px;
+      max-width: 220px;
       text-transform: capitalize;
-      padding: 0px 30px;
+      padding: 0px 10px;
     }
 
     input {
@@ -141,16 +142,18 @@ body {
     margin-bottom: $spacing;
   }
 
-  .text-wrapper {
-    text-align: center;
-    font-weight: 500;
-  }
-
   .intro {
     text-align: center;
     font-weight: 500;
     font-size: $fontSizeSmall;
     margin-bottom: $spacing;
+    display: flex;
+    justify-content: center;
+    :first-child{
+      width: 60%;
+      text-align: justify;
+      text-justify: inter-word;
+    }
   }
 
   .grid {
@@ -187,19 +190,31 @@ body {
       align-items: center;
       justify-content: center;
       :first-child {
-        display: flex;
-        align-items: center;
-        font-weight: 700;
-        justify-content: center;
-        font-size: 40px;
-        border: 10px solid $colorNeutralDark;
         width: 200px;
         height: 200px;
-        border-radius: 50%;
+        position: relative;
+
+        :first-child {
+          display: flex;
+          align-items: center;
+          font-weight: 700;
+          justify-content: center;
+          font-size: 40px;
+          border: 1px dashed $colorNeutralDark;
+          width: 200px;
+          height: 200px;
+          border-radius: 50%;
+          position: absolute;
+        }
+        :last-child {
+          border: 2px solid $colorNeutralDark;
+          border-radius: 50%;
+          position: absolute;
+        }
       }
 
       :last-child {
-        margin-top: $spacing;
+        padding-top: calc(3 * $spacing);
         font-size: $fontSize;
       }
 

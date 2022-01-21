@@ -1,7 +1,7 @@
 import {
   select, axisBottom, axisLeft, format, pie, arc, area,
-  scaleLinear, scaleBand, scaleOrdinal, max, ascending,
-  curveNatural, axisTop, descending, timeFormat, curveBasis, curveCardinal
+  scaleLinear, scaleBand, scaleOrdinal, max, scaleSqrt,
+  axisTop, descending, timeFormat,
 } from 'd3'
 
 // local
@@ -52,6 +52,7 @@ export default class Chart {
     this.selection
       .append("div")
       .attr("class", "intro")
+      .append("div")
       .html(TEXT.INTRO)
 
     this.selection
@@ -433,15 +434,45 @@ export default class Chart {
     this.percentText
       .html("which means you earn")
 
-
+    const scale = scaleSqrt()
+      .domain([0, 1])
+      .range([1, 200]); // … then change 1 to 0
+    console.log(gap, gapData)
     this.percentDiv
       .selectAll(`.${C.PCT}`)
       .data([gapData])
       .join("div")
       .attr("class", `${C.PCT}`)
       .attr("transform", `translate(${this.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`)
-      .html((d) => `<div> ${(100 - d * 100).toFixed(0)} ¢</div>
-  <div class="pct-label">on the dollar</div>`);
+      .call(div => div
+        .selectAll('.cent-wrapper')
+        .data(d => [d])
+        .join('div')
+        .attr('class', 'cent-wrapper')
+        .call(div => div
+          .selectAll('.cent-number')
+          .data(d => [d])
+          .join('div')
+          .attr('class', 'cent-number')
+          .html(d => `${(100 - d * 100).toFixed(0)}¢`)
+        )
+        .call(div => div
+          .selectAll('.cent-circle')
+          .data(d => [d])
+          .join('div')
+          .attr('class', 'cent-circle')
+          .style('width', `${scale(1 - gapData)}px`)
+          .style('height', `${scale(1 - gapData)}px`)
+          .style('left', `${(200 - scale(1 - gapData)) / 2}px`)
+          .style('top', `${(200 - scale(1 - gapData)) / 2}px`)
+        ))
+      .call(div => div
+        .selectAll('.pct-label')
+        .data(d => [d])
+        .join('div')
+        .attr('class', 'pct-label')
+        .html("on the dollar"))
+
   }
 
   drawBars() {
@@ -455,7 +486,7 @@ export default class Chart {
     const [gap] = getPercentData(barData)
 
     this.barText
-      .html(`<span>You earn</span >
+      .html(`<span> You earn</span >
     <strong>${format("($,.0f")(Math.abs(gap))}
     ${gap > 0 ? 'less' : 'more'}</strong>
     <span>than average salaries of the <strong>${this.count}</strong>
