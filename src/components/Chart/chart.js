@@ -249,7 +249,7 @@ export default class Chart {
     const yRange = loss ? [CONFIG.MARGIN.y, CONFIG.HEIGHT - CONFIG.MARGIN.y] : [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y]
     const xLine = scaleLinear([0, 30], [CONFIG.MARGIN.x, this.WIDTH - CONFIG.MARGIN.x])
     const yLine = scaleLinear(yDomain, yRange)
-    const xAxisLine = loss ? axisTop(xLine).ticks(5).tickSizeOuter(0) : axisBottom(xLine).ticks(8).tickSizeOuter(0)
+    const xAxisLine = loss ? axisTop(xLine).ticks(5).tickSizeOuter(0) : axisBottom(xLine).ticks(8).tickSizeOuter(0).tickPadding(14)
     const yAxisLine = axisLeft(yLine).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
 
     this.areaText

@@ -31,8 +31,6 @@ const getBarData = (data, currentRegion, yearsDVExp, currentGender) => {
     ]
   )
 
-  console.log(distribution)
-
   const payAverages = distribution.map(([gender, data]) => [
     gender,
     data.reduce(
