@@ -193,12 +193,7 @@ export default class Chart {
       .attr("class", "empty")
       .html(TEXT.EMPTY)
 
-    const footer = this.selection
-      .append("div")
-    // .attr("class", "footer")
-
-    // footer.append("div")
-    //   .html("link to survey")
+    const footer = select("#footer")
 
     this.WIDTH = select('.bar-container').node().getBoundingClientRect().width
 
@@ -434,7 +429,6 @@ export default class Chart {
           .data((d) => d)
           .join("text")
           .attr("class", "donut")
-          .style("stroke", "black")
           .text(({ type, value }) => type === "worked_days" ? (262 - value > 0 ? "-" : "+") + (Math.abs(262 - value)).toFixed(2) + " days" : "")
           .attr("dy", "0.25em")
       )
@@ -444,12 +438,12 @@ export default class Chart {
   drawPercent() {
     const [gap, gapData] = getPercentData(this.barData)
     this.percentText
-      .html("which means you earn")
+      .html(`This means you earn <strong>${(100 - gapData * 100).toFixed(0)}¢</strong> on the dollar`)
 
     const scale = scaleSqrt()
       .domain([0, 1])
       .range([1, 200]); // … then change 1 to 0
-    console.log(gap, gapData)
+
     this.percentDiv
       .selectAll(`.${C.PCT}`)
       .data([gapData])
@@ -482,8 +476,8 @@ export default class Chart {
         .selectAll('.pct-label')
         .data(d => [d])
         .join('div')
-        .attr('class', 'pct-label')
-        .html("on the dollar"))
+        .attr('class', 'pct-label'))
+    // .html("on the dollar"))
 
   }
 
@@ -586,5 +580,9 @@ export default class Chart {
 
     // draw chart again to transition
     this.draw()
+  }
+
+  clear() {
+    this.selection.html("")
   }
 }

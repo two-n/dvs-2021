@@ -19,8 +19,8 @@ const CONFIG = {
   WIDTH: 400,
   MARGIN: { x: 80, y: 40 },
   COLOR_RANGE: {
-    gray: ["#929292", "#464646"], color: ["#2D898B",
-      "#6B0F1A"]
+    gray: ["#929292", "#464646"], color: ["#2CB1A5",
+      "#A05E9C"]
   }
 }
 
@@ -51,7 +51,7 @@ const GENDERS = ["All Genders", "Female", "Male", "Self-described"]
 
 const TEXT = {
   INTRO: `The tool below allows you to compare your yearly income to the incomes of those who
-  participated in the Data Visualization Society's 'State of the Data Visualization Industry' 2021 Survey.
+  participated in the <a href="https://www.datavisualizationsociety.org/" target=_blank>Data Visualization Society's</a> 'State of the Data Visualization Industry' 2021 Survey.
   In total, 2165 survey responses were collected. Of those 2165 respondants, 1539 provided a yearly income.
   These incomes were provided in a range. In order to calculate the average incomes, I took the higher end
   of those salary ranges and averaged them across the 1539 respondants. The tool below allows you to further
