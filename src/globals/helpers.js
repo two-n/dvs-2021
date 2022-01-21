@@ -88,7 +88,7 @@ const getAreaData = (data) => {
 
   const wealth_sum = growth[30]
   const lineData = Object.entries(growth).map(([num, dollars]) => [+num, dollars])
-  return [lineData, wealth_sum]
+  return [lineData, wealth_sum, growth]
 }
 
 export { getBarData, getPercentData, getAreaData }

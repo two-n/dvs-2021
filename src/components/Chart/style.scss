@@ -305,5 +305,21 @@ body {
     justify-content: center;
   }
 }
+.tooltip-line {
+  stroke: $colorSecondary;
+  // stroke-width: 3px;
+}
+.tooltip {
+  background-color: $colorNeutralLight;
+  font-size: $fontNormal;
+  font-family: $fontNormal;
+  color: $colorTertiary;
+  position: absolute;
+  z-index: 10;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 2px solid $colorTertiary;
+
+}
 
 }

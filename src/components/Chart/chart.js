@@ -1,7 +1,7 @@
 import {
   select, axisBottom, axisLeft, format, pie, arc, area,
   scaleLinear, scaleBand, scaleOrdinal, max, scaleSqrt,
-  axisTop, descending, timeFormat,
+  axisTop, descending, timeFormat, min, pointer
 } from 'd3'
 
 // local
@@ -237,16 +237,16 @@ export default class Chart {
   }
 
   drawArea() {
-    const [areaData, wealth_sum] = getAreaData(this.barData)
+    const [areaData, wealth_sum, growth] = getAreaData(this.barData)
     const [gap, gapData] = getPercentData(this.barData)
     const loss = !areaData.find(([_, y]) => y < 0)
     const mappedAreaData = areaData.map(([x, y]) => (y < 0 ? [x, -y] : [x, y]))
     const yDomain = [0, max(mappedAreaData.map(([_, dollars]) => dollars))]
     const yRange = loss ? [CONFIG.MARGIN.y, CONFIG.HEIGHT - CONFIG.MARGIN.y] : [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y]
-    const xLine = scaleLinear([1, 30], [CONFIG.MARGIN.x, this.WIDTH - CONFIG.MARGIN.x])
-    const yLine = scaleLinear(yDomain, yRange)
-    const xAxisLine = loss ? axisTop(xLine).ticks(5).tickSizeOuter(0) : axisBottom(xLine).ticks(8).tickSizeOuter(0).tickPadding(14)
-    const yAxisLine = axisLeft(yLine).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
+    const xScale = scaleLinear([1, 30], [CONFIG.MARGIN.x, this.WIDTH - CONFIG.MARGIN.x])
+    const yScale = scaleLinear(yDomain, yRange)
+    const xAxisLine = loss ? axisTop(xScale).ticks(5).tickSizeOuter(0) : axisBottom(xScale).ticks(8).tickSizeOuter(0).tickPadding(14)
+    const yAxisLine = axisLeft(yScale).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
 
     this.areaText
       .html(`Your pay gap of <strong>${format("($,.0f")(Math.abs(gap))}</strong> could accumulate
@@ -289,9 +289,9 @@ export default class Chart {
 
     const areaGenerator =
       area()
-        .x(([x]) => xLine(x))
-        .y0(yLine(0))
-        .y1(([_, y]) => yLine(y))
+        .x(([x]) => xScale(x))
+        .y0(yScale(0))
+        .y1(([_, y]) => yScale(y))
     svg
       .selectAll('path.wealth-gap')
       .data([mappedAreaData])
@@ -300,6 +300,46 @@ export default class Chart {
       .transition()
       .attr("fill", CONFIG.COLOR_RANGE[this.toggleVal.text][0])
       .attr("d", areaGenerator)
+
+    // intersecting line
+    const tooltipLine = svg.append('line').attr("class", "tooltip-line");
+    const tooltip = this.selection.append('div').attr('class', 'tooltip')
+    function removeTooltip() {
+      if (tooltip) tooltip.style('display', 'none');
+      if (tooltipLine) tooltipLine.style('stroke-width', "0px");
+    }
+
+    function drawTooltip(e) {
+      const game = Math.floor((xScale.invert(pointer(e)[0])))
+      if (game >= min(xScale.domain()) && game <= max(xScale.domain())) {
+        tooltipLine
+          .attr('stroke', 'grey')
+          .attr('x1', xScale(game))
+          .attr('x2', xScale(game))
+          .attr('y1', CONFIG.MARGIN.y)
+          .attr('y2', CONFIG.HEIGHT - CONFIG.MARGIN.y)
+          .style("stroke-width", "3px")
+        // .attr('stroke-dasharray', 5)
+
+        tooltip
+          .style('display', 'block')
+          .style('top', e.pageY + 10 + 'px')
+          .style('left', e.pageX + 10 + 'px')
+
+        tooltip.selectAll('.game')
+          .data([game])
+          .join('div')
+          .attr('class', 'game')
+          .html(d => `${format("($,.0f")(growth[d])}`)
+
+      }
+    }
+    const tipBox = svg.append('rect')
+      .attr('width', this.WIDTH)
+      .attr('height', CONFIG.HEIGHT)
+      .attr('opacity', 0)
+      .on('mousemove', drawTooltip)
+      .on('mouseout', removeTooltip);
   }
 
   drawDonut() {
