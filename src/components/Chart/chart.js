@@ -135,11 +135,13 @@ export default class Chart {
 
     this.barGroup = this.grid
       .append("div")
-      .attr("class", "bars")
+      .attr("class", "bar-container")
 
     this.barSvg =
       this.barGroup.append("svg")
-        .attr("width", CONFIG.WIDTH)
+        .attr("width", function () {
+          return select(this.parentNode).style('width')
+        })
         .attr("height", CONFIG.HEIGHT)
 
     this.percentText = this.grid
@@ -152,11 +154,6 @@ export default class Chart {
 
     this.percentDiv = this.percentGroup
       .append("div")
-    // .attr("width", CONFIG.WIDTH)
-    // .attr("height", CONFIG.HEIGHT)
-
-
-
 
     this.donutText = this.grid
       .append("div")
@@ -169,8 +166,9 @@ export default class Chart {
     this.donutSvg =
       this.donutGroup
         .append("svg")
-        .attr("width", CONFIG.WIDTH)
-        .attr("height", CONFIG.HEIGHT)
+        .attr("width", function () {
+          return select(this.parentNode).style('width')
+        }).attr("height", CONFIG.HEIGHT)
 
 
     this.areaText = this.grid
@@ -184,7 +182,9 @@ export default class Chart {
 
     this.areaSvg = this.areaGroup
       .append("svg")
-      .attr("width", CONFIG.WIDTH)
+      .attr("width", function () {
+        return select(this.parentNode).style('width')
+      })
       .attr("height", CONFIG.HEIGHT)
 
     this.empty = this.selection
@@ -199,26 +199,25 @@ export default class Chart {
     footer.append("div")
       .html("link to survey")
 
+    this.WIDTH = select('.bar-container').node().getBoundingClientRect().width
+
     this.draw()
+
 
   }
 
   draw() {
     const [averages, count] = getBarData(this.data, this.region, this.experience, this.gender)
     this.count = count.length
-    console.log('averages', averages)
     // update data
     this.grid.classed("hidden", !averages.length)
     this.empty.classed("hidden", averages.length)
-
     if (averages.length) {
       this.barData = [['You', { avg_pay_high: this.salary }], ...averages]
       this.drawBars()
       this.drawPercent()
       this.drawDonut()
       this.drawArea()
-    } else {
-
     }
     this.drawDropdowns()
 
@@ -248,7 +247,7 @@ export default class Chart {
     const mappedAreaData = areaData.map(([x, y]) => (y < 0 ? [x, -y] : [x, y]))
     const yDomain = [0, max(mappedAreaData.map(([_, dollars]) => dollars))]
     const yRange = loss ? [CONFIG.MARGIN.y, CONFIG.HEIGHT - CONFIG.MARGIN.y] : [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y]
-    const xLine = scaleLinear([0, 30], [CONFIG.MARGIN.x, CONFIG.WIDTH - CONFIG.MARGIN.x])
+    const xLine = scaleLinear([0, 30], [CONFIG.MARGIN.x, this.WIDTH - CONFIG.MARGIN.x])
     const yLine = scaleLinear(yDomain, yRange)
     const xAxisLine = loss ? axisTop(xLine).ticks(5).tickSizeOuter(0) : axisBottom(xLine).ticks(8).tickSizeOuter(0)
     const yAxisLine = axisLeft(yLine).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
@@ -279,7 +278,7 @@ export default class Chart {
       .data([0])
       .join('text')
       .attr('class', `${C.X}-${C.AXIS}-${C.LABEL}`)
-      .attr('transform', `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT})`)
+      .attr('transform', `translate(${this.WIDTH / 2}, ${CONFIG.HEIGHT})`)
       .text('Years')
 
     // Y-Axis
@@ -358,7 +357,7 @@ export default class Chart {
       .attr("class", "donuts_inner")
       .attr(
         "transform",
-        `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`
+        `translate(${this.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`
       )
       .call((g) =>
         g
@@ -381,7 +380,7 @@ export default class Chart {
       .attr("class", "label-donut")
       .attr(
         "transform",
-        `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`
+        `translate(${this.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`
       )
       .call((g) =>
         g
@@ -403,7 +402,7 @@ export default class Chart {
       .attr("class", "donuts")
       .attr(
         "transform",
-        `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`
+        `translate(${this.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`
       )
       .call((g) =>
         g
@@ -425,9 +424,6 @@ export default class Chart {
           .style("stroke", "black")
           .text(({ type, value }) => type === "worked_days" ? (262 - value > 0 ? "-" : "+") + (Math.abs(262 - value)).toFixed(2) + " days" : "")
           .attr("dy", "0.25em")
-        // .transition()
-        // .duration(500)
-        // .attr("opacity", 0)
       )
 
   }
@@ -443,7 +439,7 @@ export default class Chart {
       .data([gapData])
       .join("div")
       .attr("class", `${C.PCT}`)
-      .attr("transform", `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`)
+      .attr("transform", `translate(${this.WIDTH / 2}, ${CONFIG.HEIGHT / 2})`)
       .html((d) => `<div> ${(100 - d * 100).toFixed(0)} ¢</div>
   <div class="pct-label">on the dollar</div>`);
   }
@@ -452,12 +448,11 @@ export default class Chart {
 
     const barData = this.barData
     const yScale = scaleLinear([0, max(barData.map(([_, { avg_pay_high }]) => avg_pay_high))], [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y])
-    const xScale = scaleBand(["You", this.gender], [CONFIG.MARGIN.x, CONFIG.WIDTH - CONFIG.MARGIN.x]).padding(.05)
+    const xScale = scaleBand(["You", this.gender], [CONFIG.MARGIN.x, this.WIDTH - CONFIG.MARGIN.x]).padding(.05)
     const xAxis = axisBottom(xScale).tickSizeOuter(0)
     const yAxis = axisLeft(yScale).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
     const colorScale = scaleOrdinal(["You", this.gender], CONFIG.COLOR_RANGE[this.toggleVal.text])
     const [gap] = getPercentData(barData)
-    console.log(barData)
 
     this.barText
       .html(`<span>You earn</span >
@@ -483,7 +478,7 @@ export default class Chart {
       .data([0])
       .join('text')
       .attr('class', `${C.X}-${C.AXIS}-${C.LABEL}`)
-      .attr('transform', `translate(${CONFIG.WIDTH / 2}, ${CONFIG.HEIGHT})`)
+      .attr('transform', `translate(${this.WIDTH / 2}, ${CONFIG.HEIGHT})`)
       .text('Gender')
 
     // Y-Axis

@@ -211,6 +211,7 @@ body {
     }
     .area-container, .percent-container, .bar-container, .donut-container {
       text-align: center;
+      width: 100%;
     }
 
     .donut-container  {
@@ -231,7 +232,7 @@ body {
 @media screen and (min-width: 900px) {
   .grid {
     /* Apply some styles */
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.5fr;
 
   }
 }
