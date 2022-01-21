@@ -86,7 +86,7 @@ const getAreaData = (data) => {
     [v]: t[v - 1] ? t[v - 1] * 1.0829 : gap
   }), {})
 
-  const wealth_sum = sum(Object.values(growth))
+  const wealth_sum = growth[30]
   const lineData = Object.entries(growth).map(([num, dollars]) => [+num, dollars])
   return [lineData, wealth_sum]
 }
