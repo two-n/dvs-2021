@@ -1,7 +1,7 @@
 import {
   select, axisBottom, axisLeft, format, pie, arc, area,
   scaleLinear, scaleBand, scaleOrdinal, max, scaleSqrt,
-  axisTop, descending, timeFormat, min, pointer
+  axisTop, descending, timeFormat, min, pointer, ascending
 } from 'd3'
 
 // local
@@ -216,6 +216,7 @@ export default class Chart {
       this.drawArea()
     }
     this.drawDropdowns()
+    this.drawDisclaimer()
 
   }
 
@@ -303,7 +304,7 @@ export default class Chart {
 
     // intersecting line
     const tooltipLine = svg.append('line').attr("class", "tooltip-line");
-    const tooltip = this.selection.append('div').attr('class', 'tooltip')
+    const tooltip = this.selection.append('div').attr('class', 'tooltip').style("display", "none")
     function removeTooltip() {
       if (tooltip) tooltip.style('display', 'none');
       if (tooltipLine) tooltipLine.style('stroke-width', "0px");
@@ -620,6 +621,32 @@ export default class Chart {
 
     // draw chart again to transition
     this.draw()
+  }
+
+  drawDisclaimer() {
+    this.selection
+      .append("div")
+      .attr('class', 'disclaimer')
+      .call(div =>
+        div.append("div")
+          .html("I divided the countries in the survey into the following regions:")
+      )
+      .call(div => div.append('ul')
+        .selectAll('.region-list')
+        .data(Object.entries(REGIONS).filter(([k, v]) => k !== "All Regions"))
+        .join('li')
+        .attr('class', 'region-list')
+        .html(([k, v]) => `<strong>${k}</strong>: ${v.sort().join(", ")}`))
+      .call(div =>
+        div.append("div")
+          .html("I divided the experience levels in the survey into the following brackets:")
+      )
+      .call(div => div.append('ul')
+        .selectAll('.experience-list')
+        .data(Object.entries(EXPERIENCE).filter(([k, v]) => k !== "Any"))
+        .join('li')
+        .attr('class', 'experience-list')
+        .html(([k, v]) => `<strong>${k}</strong>: ${v.sort().join(", ")}`))
   }
 
   clear() {
