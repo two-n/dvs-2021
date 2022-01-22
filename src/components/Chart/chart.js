@@ -1,14 +1,14 @@
 import {
   select, axisBottom, axisLeft, format, pie, arc, area,
   scaleLinear, scaleBand, scaleOrdinal, max, scaleSqrt,
-  axisTop, descending, timeFormat, min, pointer, line
+  axisTop, descending, min, pointer, line
 } from 'd3'
 
 // local
 import DropDown from '../Dropdown/dropDown'
 import Toggle from '../Toggle/toggle'
-import { CLASSES as C, CONFIG, EXPERIENCE, FILTERS, REGIONS, TOGGLE_VALS, TEXT, GENDERS } from '../../globals/constants'
-import { getBarData, getPercentData, getAreaData } from '../../globals/helpers'
+import { CLASSES as C, CONFIG, EXPERIENCE, FILTERS, REGIONS, TOGGLE_VALS, TEXT, GENDERS, MONTHS } from '../../globals/constants'
+import { getBarData, getPercentData, getAreaData, FORMATTERS as F } from '../../globals/helpers'
 
 import './style.scss';
 
@@ -22,7 +22,6 @@ export default class Chart {
     // filters
     this.region = Object.keys(REGIONS)[0]
     this.gender = GENDERS[0]
-    this.education = "B.A."
     this.experience = Object.keys(EXPERIENCE)[0]
     this.salary = 30000
     this.toggleVal = TOGGLE_VALS[0]
@@ -104,23 +103,12 @@ export default class Chart {
       .append("div")
       .attr("class", "filter-label")
       .html("with")
-    // education dropdown
-    // const educationWrapper = dropdownContainer
-    //   .append("div")
-    //   .attr("class", "filter-wrapper")
-    // new DropDown(educationWrapper,
-    //   ["B.A.", "M.A.", "PhD"],
-    //   this.education,
-    //   this.handleFilter);
 
     // experience dropdown
     this.experienceWrapper = dropdownContainer
       .append("div")
       .attr("class", "filter-wrapper")
-    // dropdownContainer
-    //   .append("div")
-    //   .attr("class", "filter-label")
-    //   .html("years experience")
+
     dropdownContainer
       .append("div")
       .attr("class", "filter-label")
@@ -245,12 +233,12 @@ export default class Chart {
     const xScale = scaleLinear([1, 30], [CONFIG.MARGIN.left, this.WIDTH - CONFIG.MARGIN.right])
     const yScale = scaleLinear(yDomain, yRange)
     const xAxisLine = loss ? axisTop(xScale).ticks(5).tickSizeOuter(0) : axisBottom(xScale).ticks(8).tickSizeOuter(0).tickPadding(14)
-    const yAxisLine = axisLeft(yScale).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
+    const yAxisLine = axisLeft(yScale).ticks(5).tickFormat(F.thou).tickSizeOuter(0)
 
     this.areaText
-      .html(`Your pay gap of <strong>${format("($,.0f")(Math.abs(gap))}</strong> could accumulate
+      .html(`Your pay gap of <strong>${F.dollar(Math.abs(gap))}</strong> could accumulate
         to a <strong>${wealth_sum > 0 ? 'loss' : 'gain'}
-        of ${format("($,.0f")(Math.abs(wealth_sum))}</strong> in wealth over 30 years,
+        of ${F.dollar(Math.abs(wealth_sum))}</strong> in wealth over 30 years,
         assuming you invest that amount today in an index fund tracking the S&P 500.
         This is assuming an inflation adjusted return of 8.29% year over year,
         as is the historical return of the S&P 500.`)
@@ -315,7 +303,7 @@ export default class Chart {
       .attr("fill", "none")
       .attr("d", lineGenerator)
 
-    // intersecting line
+    // draw tooltip
     const tooltipLine = svg.append('line').attr("class", "tooltip-line");
     const tooltip = this.selection.append('div').attr('class', 'tooltip').style("display", "none")
     function removeTooltip() {
@@ -333,7 +321,6 @@ export default class Chart {
           .attr('y1', CONFIG.MARGIN.y)
           .attr('y2', CONFIG.HEIGHT - CONFIG.MARGIN.y)
           .style("stroke-width", "3px")
-        // .attr('stroke-dasharray', 5)
 
         tooltip
           .style('display', 'block')
@@ -344,11 +331,12 @@ export default class Chart {
           .data([game])
           .join('div')
           .attr('class', 'game')
-          .html(d => `${format("($,.0f")(growth[d])}`)
+          .html(d => `${F.dollar(growth[d])}`)
 
       }
     }
-    const tipBox = svg.append('rect')
+    // append hover area
+    svg.append('rect')
       .attr('width', this.WIDTH)
       .attr('height', CONFIG.HEIGHT)
       .attr('opacity', 0)
@@ -361,7 +349,7 @@ export default class Chart {
     const [gap, gapData] = getPercentData(this.barData)
     const days = 365 * gapData
     const new_year = new Date("1/1/2021")
-    const date = timeFormat("%B %_d")(new Date().setDate(new_year.getDate() + days))
+    const date = F.date(new Date().setDate(new_year.getDate() + days))
 
     const donutData = [{ type: "worked_days", value: 262 + gapData * 262 }]
     let overflowData = [];
@@ -374,7 +362,7 @@ export default class Chart {
 
     this.donutText
       .html(`and you work
-      <strong>${format("(,.0f")(Math.abs(262 * gapData))} days </strong>
+      <strong>${F.num(Math.abs(262 * gapData))} days </strong>
       ${gapData > 0 ? 'more' : 'less'}
       than the average respondant to earn the same amount.
       In other words, you
@@ -398,7 +386,6 @@ export default class Chart {
       arc()
         .innerRadius(donutRadius)
         .outerRadius(donutRadius - space)
-        // .padAngle(10)
         .cornerRadius(10);
 
     const svg = this.donutSvg
@@ -424,8 +411,8 @@ export default class Chart {
       )
 
     const labelData =
-      ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
-        .map((d) => ({ type: d, value: 1 }))
+      MONTHS.map((d) => ({ type: d, value: 1 }))
+
     svg
       .selectAll("g.label-donut")
       .data([labelData])
@@ -496,7 +483,7 @@ export default class Chart {
 
     const scale = scaleSqrt()
       .domain([0, 1])
-      .range([1, 200]); // … then change 1 to 0
+      .range([1, 200]);
 
     this.percentDiv
       .selectAll(`.${C.PCT}`)
@@ -531,8 +518,6 @@ export default class Chart {
         .data(d => [d])
         .join('div')
         .attr('class', 'pct-label'))
-    // .html("on the dollar"))
-
   }
 
   drawBars() {
@@ -541,7 +526,7 @@ export default class Chart {
     const yScale = scaleLinear([0, max(barData.map(([_, { avg_pay_high }]) => avg_pay_high))], [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y])
     const xScale = scaleBand(["You", this.gender], [CONFIG.MARGIN.left, this.WIDTH - CONFIG.MARGIN.right]).padding(.05)
     const xAxis = axisBottom(xScale).tickSizeOuter(0)
-    const yAxis = axisLeft(yScale).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
+    const yAxis = axisLeft(yScale).ticks(5).tickFormat(F.thou).tickSizeOuter(0)
     const colorScale = scaleOrdinal(["You", this.gender], CONFIG.COLOR_RANGE[this.toggleVal.text])
     const [gap] = getPercentData(barData)
 
@@ -551,7 +536,7 @@ export default class Chart {
     <strong>${format("($,.0f")(Math.abs(gap))}
     ${gap > 0 ? 'less' : 'more'}</strong>
     <span>than average income of the <strong>${this.count}</strong>
-    survey respondants who met your filter criteria. The average income is ${format("($,.0f")(barData[1][1].avg_pay_high)}.</span>`)
+    survey respondants who met your filter criteria. The average income is ${F.dollar(barData[1][1].avg_pay_high)}.</span>`)
 
     const svg = this.barSvg
 

@@ -1,5 +1,5 @@
 
-import { group, rollups, sum, max, range } from 'd3'
+import { group, rollups, sum, max, range, timeFormat, format } from 'd3'
 import { EXPERIENCE, REGIONS } from './constants'
 
 const getBarData = (data, currentRegion, yearsDVExp, currentGender) => {
@@ -91,4 +91,11 @@ const getAreaData = (data) => {
   return [lineData, wealth_sum, growth]
 }
 
-export { getBarData, getPercentData, getAreaData }
+const FORMATTERS = {
+  date: timeFormat("%B %_d"),
+  dollar: format("($,.0f"),
+  num: format("(,.0f"),
+  thou: format("$~s")
+}
+
+export { getBarData, getPercentData, getAreaData, FORMATTERS }

@@ -49,7 +49,6 @@ const REGIONS = {
 
 const EXPERIENCE = { "Any": "All", "2 or less": ["Less than 1 year", "1", "2"], "3-5": ["3", "4", "5"], "6-10": ["6–10"], "11 or more": ["11–15", "16–20", "21–25", "26–30", "More than 30"] }
 const GENDERS = ["All", "Female", "Male", "Self-described"]
-
 const TEXT = {
   INTRO: `The tool below allows you to compare your yearly income to the incomes of those who
   participated in the <a href="https://www.datavisualizationsociety.org/" target=_blank>Data Visualization Society's</a> 'State of the Data Visualization Industry' 2021 Survey.
@@ -59,7 +58,8 @@ const TEXT = {
   filter these responses by the respondant's gender, region, and level of experience. Enter your yearly income
   below to see how you compare to the survey respondants.`,
   EMPTY: "Sorry, there is no data for your selected filters."
-
 }
 
-export { CLASSES, CONFIG, REGIONS, EXPERIENCE, GENDERS, FILTERS, TOGGLE_VALS, TEXT }
+const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+
+export { CLASSES, CONFIG, REGIONS, EXPERIENCE, GENDERS, FILTERS, TOGGLE_VALS, TEXT, MONTHS }

@@ -14,7 +14,7 @@ body {
   margin: 0 auto;
   background-color: $colorNeutralLight;
   font-family: $fontNormal;
-
+  color: $colorNeutralDark;
 }
 
 .empty {
@@ -43,6 +43,7 @@ body {
   background-color: $colorNeutralLight;
   margin-top: 50px;
   z-index: 5;
+  color: $colorNeutralMed;
   font-size: $fontSizeSmall;
 
   img {
@@ -60,7 +61,6 @@ body {
   flex-direction: column;;
   row-gap: 20px;
   padding-top: 30px;
-  color: $colorNeutralDark;
 
   a {
     color: $colorTertiary;
@@ -204,7 +204,6 @@ body {
     align-items: center;
     font-size: $fontSize;
     padding-top: 30px;
-    // border-top: 1px dashed $colorNeutralDark;
     gap: 80px;
 
     > div {

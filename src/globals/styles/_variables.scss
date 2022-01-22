@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500;700&family=Poppins:wght@300;400;500;700&display=swap');
 .data-vis {
 
   &.color {
@@ -14,7 +14,7 @@
     --colorTertiary: #DCB32A;
   }
 }
-$fontNormal: 'Open Sans', sans-serif;
+$fontNormal: 'Poppins', sans-serif;
 
 // TYPOGRAPHY
 $fontSizeXSmall: 10px;
