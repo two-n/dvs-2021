@@ -1,6 +1,6 @@
 
 import { group, rollups, sum, max, range, timeFormat, format } from 'd3'
-import { EXPERIENCE, REGIONS } from './constants'
+import { EXPERIENCE, REGIONS, PAY_KEYS } from './constants'
 
 const getBarData = (data, currentRegion, yearsDVExp, currentGender) => {
   const people = data.filter(
@@ -38,29 +38,29 @@ const getBarData = (data, currentRegion, yearsDVExp, currentGender) => {
         ...acc,
         total_pay_low: sum(
           data.map(
-            (d) =>
-              +d[0]?.split("-")[0].substring(1).trim().replace(/,/, "") * d[1]
+            ([pay, count]) =>
+              PAY_KEYS[pay].low * count
           )
         ),
         total_pay_high: sum(
           data.map(
-            (d) =>
-              +d[0]?.split("-")[1]?.trim().substring(1).replace(/,/, "") * d[1]
+            ([pay, count]) =>
+              PAY_KEYS[pay].high * count
           )
         ),
         total_num: sum(data.map((d) => d[1])),
         avg_pay_low:
           sum(
             data.map(
-              (d) =>
-                +d[0]?.split("-")[0].substring(1).trim().replace(/,/, "") * d[1]
+              ([pay, count]) =>
+                PAY_KEYS[pay].low * count
             )
           ) / sum(data.map((d) => d[1])),
         avg_pay_high:
           sum(
             data.map(
-              (d) =>
-                +d[0]?.split("-")[1]?.trim().substring(1).replace(/,/, "") * d[1]
+              ([pay, count]) =>
+                PAY_KEYS[pay].high * count
             )
           ) / sum(data.map((d) => d[1])),
         count: data.length

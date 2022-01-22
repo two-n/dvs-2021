@@ -62,4 +62,21 @@ const TEXT = {
 
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
 
-export { CLASSES, CONFIG, REGIONS, EXPERIENCE, GENDERS, FILTERS, TOGGLE_VALS, TEXT, MONTHS }
+const PAY_KEYS = {
+  '$10,000 - $19,999': { low: 10000, high: 19999 },
+  '$80,000 - $99,999': { low: 80000, high: 99999 },
+  '$100,000 - $119,999': { low: 100000, high: 119999 },
+  '$40,000 - $59,999': { low: 40000, high: 59999 },
+  '$180,000 - $199,999': { low: 180000, high: 199999 },
+  '$140,000 - $159,999': { low: 140000, high: 159999 },
+  '$60,000 - $79,999': { low: 60000, high: 79999 },
+  '$120,000 - $139,999': { low: 120000, high: 139999 },
+  'Less than $10,000': { low: 0, high: 10000 },
+  '$20,000 - $39,999': { low: 20000, high: 39999 },
+  '$220,000 - $239,999': { low: 220000, high: 239999 },
+  '$200,000 - $219,999': { low: 200000, high: 219999 },
+  '$160,000 - $179,999': { low: 160000, high: 179999 },
+  '$240,000 or more': { low: 240000, high: 240000 },
+}
+
+export { CLASSES, CONFIG, REGIONS, EXPERIENCE, GENDERS, FILTERS, TOGGLE_VALS, TEXT, MONTHS, PAY_KEYS }
