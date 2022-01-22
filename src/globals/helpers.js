@@ -16,10 +16,10 @@ const getBarData = (data, currentRegion, yearsDVExp, currentGender) => {
       PayAnnual && PayAnnual !== "I am not compensated on a yearly basis" &&
       (currentRegion === "All Regions" || REGIONS[currentRegion].includes(Loc1Country)) &&
       (yearsDVExp === "Any" || EXPERIENCE[yearsDVExp].includes(YearsDVExperience)) &&
-      (currentGender === "All Genders" || currentGender === Gender_summarized)
+      (currentGender === "All" || currentGender === Gender_summarized)
   )
 
-  const genders = currentGender === "All Genders" ? [["All Genders", people]] : [...group(people, (d) => d.Gender_summarized).entries()]
+  const genders = currentGender === "All" ? [["All", people]] : [...group(people, (d) => d.Gender_summarized).entries()]
   const distribution = genders.map(
     ([k, v]) => [
       k,

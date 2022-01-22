@@ -17,7 +17,7 @@ const CLASSES = {
 const CONFIG = {
   HEIGHT: 300,
   WIDTH: 400,
-  MARGIN: { x: 80, y: 40 },
+  MARGIN: { left: 80, right: 40, y: 40 },
   COLOR_RANGE: {
     gray: ["#929292", "#464646"], color: ["#2CB1A5",
       "#A05E9C"]
@@ -48,7 +48,7 @@ const REGIONS = {
 }
 
 const EXPERIENCE = { "Any": "All", "2 or less": ["Less than 1 year", "1", "2"], "3-5": ["3", "4", "5"], "6-10": ["6–10"], "11 or more": ["11–15", "16–20", "21–25", "26–30", "More than 30"] }
-const GENDERS = ["All Genders", "Female", "Male", "Self-described"]
+const GENDERS = ["All", "Female", "Male", "Self-described"]
 
 const TEXT = {
   INTRO: `The tool below allows you to compare your yearly income to the incomes of those who

@@ -1,7 +1,7 @@
 import {
   select, axisBottom, axisLeft, format, pie, arc, area,
   scaleLinear, scaleBand, scaleOrdinal, max, scaleSqrt,
-  axisTop, descending, timeFormat, min, pointer, ascending
+  axisTop, descending, timeFormat, min, pointer, line
 } from 'd3'
 
 // local
@@ -198,7 +198,7 @@ export default class Chart {
     this.WIDTH = select('.bar-container').node().getBoundingClientRect().width
 
     this.draw()
-
+    this.drawDisclaimer()
 
   }
 
@@ -216,8 +216,6 @@ export default class Chart {
       this.drawArea()
     }
     this.drawDropdowns()
-    this.drawDisclaimer()
-
   }
 
   drawDropdowns() {
@@ -244,7 +242,7 @@ export default class Chart {
     const mappedAreaData = areaData.map(([x, y]) => (y < 0 ? [x, -y] : [x, y]))
     const yDomain = [0, max(mappedAreaData.map(([_, dollars]) => dollars))]
     const yRange = loss ? [CONFIG.MARGIN.y, CONFIG.HEIGHT - CONFIG.MARGIN.y] : [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y]
-    const xScale = scaleLinear([1, 30], [CONFIG.MARGIN.x, this.WIDTH - CONFIG.MARGIN.x])
+    const xScale = scaleLinear([1, 30], [CONFIG.MARGIN.left, this.WIDTH - CONFIG.MARGIN.right])
     const yScale = scaleLinear(yDomain, yRange)
     const xAxisLine = loss ? axisTop(xScale).ticks(5).tickSizeOuter(0) : axisBottom(xScale).ticks(8).tickSizeOuter(0).tickPadding(14)
     const yAxisLine = axisLeft(yScale).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
@@ -284,10 +282,14 @@ export default class Chart {
       .data([0])
       .join('g')
       .attr('class', `${C.Y}-${C.AXIS}`)
-      .attr('transform', `translate(${CONFIG.MARGIN.x}, 0)`)
+      .attr('transform', `translate(${CONFIG.MARGIN.left}, 0)`)
       .transition()
       .call(yAxisLine)
 
+    const lineGenerator =
+      line()
+        .x(([x]) => xScale(x))
+        .y(([_, y]) => yScale(y))
     const areaGenerator =
       area()
         .x(([x]) => xScale(x))
@@ -301,6 +303,17 @@ export default class Chart {
       .transition()
       .attr("fill", CONFIG.COLOR_RANGE[this.toggleVal.text][0])
       .attr("d", areaGenerator)
+
+    svg
+      .selectAll('path.wealth-line')
+      .data([mappedAreaData])
+      .join('path')
+      .attr('class', 'wealth-line')
+      .transition()
+      .attr("stroke", CONFIG.COLOR_RANGE[this.toggleVal.text][1])
+      .attr("stroke-width", 3)
+      .attr("fill", "none")
+      .attr("d", lineGenerator)
 
     // intersecting line
     const tooltipLine = svg.append('line').attr("class", "tooltip-line");
@@ -526,7 +539,7 @@ export default class Chart {
 
     const barData = this.barData
     const yScale = scaleLinear([0, max(barData.map(([_, { avg_pay_high }]) => avg_pay_high))], [CONFIG.HEIGHT - CONFIG.MARGIN.y, CONFIG.MARGIN.y])
-    const xScale = scaleBand(["You", this.gender], [CONFIG.MARGIN.x, this.WIDTH - CONFIG.MARGIN.x]).padding(.05)
+    const xScale = scaleBand(["You", this.gender], [CONFIG.MARGIN.left, this.WIDTH - CONFIG.MARGIN.right]).padding(.05)
     const xAxis = axisBottom(xScale).tickSizeOuter(0)
     const yAxis = axisLeft(yScale).ticks(5).tickFormat(format("$~s")).tickSizeOuter(0)
     const colorScale = scaleOrdinal(["You", this.gender], CONFIG.COLOR_RANGE[this.toggleVal.text])
@@ -566,7 +579,7 @@ export default class Chart {
       .data([0])
       .join('g')
       .attr('class', `${C.Y}-${C.AXIS} `)
-      .attr('transform', `translate(${CONFIG.MARGIN.x}, 0)`)
+      .attr('transform', `translate(${CONFIG.MARGIN.left}, 0)`)
       .transition()
       .call(yAxis)
 
@@ -587,7 +600,11 @@ export default class Chart {
       )
       .selectAll(`rect.${C.BAR} `)
       .data((d) => [d])
-      .join("rect")
+      .join(enter =>
+        enter
+          .append("rect")
+          .attr("y", ([, { avg_pay_high }]) => yScale(0))
+      )
       .attr("class", `${C.BAR} `)
       .attr("rx", 5)
       .attr("width", xScale.bandwidth())
@@ -597,9 +614,7 @@ export default class Chart {
         "height",
         ([_, { avg_pay_high }]) => CONFIG.HEIGHT - CONFIG.MARGIN.y - yScale(avg_pay_high)
       )
-      .transition()
       .attr("fill", ([gender]) => colorScale(gender))
-
   }
 
   handleFilter = (selectedOption, filter) => {
@@ -625,28 +640,46 @@ export default class Chart {
 
   drawDisclaimer() {
     this.selection
-      .append("div")
+      .selectAll(".disclaimer")
+      .data([0])
+      .join("div")
       .attr('class', 'disclaimer')
       .call(div =>
-        div.append("div")
+        div
+          .selectAll(".regions-disclaimer")
+          .data([0])
+          .join("div")
+          .attr('class', 'regions-disclaimer')
           .html("I divided the countries in the survey into the following regions:")
       )
-      .call(div => div.append('ul')
+      .call(div => div
+        .selectAll('.region-ul')
+        .data([0])
+        .join("ul")
+        .attr('class', 'region-ul')
         .selectAll('.region-list')
         .data(Object.entries(REGIONS).filter(([k, v]) => k !== "All Regions"))
         .join('li')
         .attr('class', 'region-list')
         .html(([k, v]) => `<strong>${k}</strong>: ${v.sort().join(", ")}`))
       .call(div =>
-        div.append("div")
+        div.selectAll(".experience-disclaimer")
+          .data([0])
+          .join("div")
+          .attr('class', 'experience-disclaimer')
           .html("I divided the experience levels in the survey into the following brackets:")
       )
-      .call(div => div.append('ul')
-        .selectAll('.experience-list')
-        .data(Object.entries(EXPERIENCE).filter(([k, v]) => k !== "Any"))
-        .join('li')
-        .attr('class', 'experience-list')
-        .html(([k, v]) => `<strong>${k}</strong>: ${v.sort().join(", ")}`))
+      .call(div =>
+        div
+          .selectAll('.experience-ul')
+          .data([0])
+          .join("ul")
+          .attr('class', 'experience-ul')
+          .selectAll('.experience-list')
+          .data(Object.entries(EXPERIENCE).filter(([k, v]) => k !== "Any"))
+          .join('li')
+          .attr('class', 'experience-list')
+          .html(([k, v]) => `<strong>${k}</strong>: ${v.sort().join(", ")}`))
   }
 
   clear() {
