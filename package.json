@@ -19,8 +19,8 @@
     "dev": "parcel index.html",
     "prebuild": "rm -rf dist",
     "build": "parcel build index.html",
-    "prototypes-build": "yarn prebuild && parcel build index.html --public-url http://prototypes.two-n.com/dataviz-pay-explorer",
-    "deploy": "rsync -avz --delete ./dist/ twoninc@two-n.com:/home/twoninc/prototypes.two-n.com/dataviz-pay-explorer"
+    "prototypes-build": "yarn prebuild && parcel build index.html --public-url http://prototypes.two-n.com/dvs-pay-explorer",
+    "deploy": "rsync -avz --delete ./dist/ twoninc@two-n.com:/home/twoninc/prototypes.two-n.com/dvs-pay-explorer"
   },
   "dependencies": {
     "d3": "^7.3.0"

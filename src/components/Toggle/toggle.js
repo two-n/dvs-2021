@@ -1,4 +1,4 @@
-import { CLASSES as C } from '../../globals/constants';
+import { CLASSES as C, TEXT } from '../../globals/constants';
 import './style.scss';
 
 export default class Toggle {
@@ -16,7 +16,7 @@ export default class Toggle {
       .join('div')
       .attr('class', C.OPTION)
       .classed(C.SELECTED, (d) => d.val === this.selected)
-      .text((d) => d.text)
+      .text((d) => TEXT.TOGGLE[d.text])
       .on('click', (e, d) => this.handleToggle(d.val));
 
     this.switch = this.el.append('label').attr('class', 'switch');

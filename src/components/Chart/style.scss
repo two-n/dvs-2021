@@ -1,36 +1,80 @@
 @import "../../globals/styles/variables";
 
+$border: 2px solid $colorPrimary;
+
 * {
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
 }
 .prototype{
-  min-width: 100vw;
   min-height: 100vh;
   margin: 0 auto;
   background-color: $colorNeutralLight;
+  font-family: $fontNormal;
+  color: $colorNeutralDark;
+}
+
+.empty {
+  &.hidden {
+    display: none;
+  }
+  &:not(.hidden){
+    @include vertical-center;
+    justify-content: center;
+    margin-top: $spacing;
+    font-size: $fontSizeNumber;
+    font-weight: $bold;
+    height: 100px;
+  }
+}
+
+#footer {
+  width: 100%;
+  min-height: 80px;
+  @include vertical-center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border-top: 2px solid $colorNeutralMed;
+  background-color: $colorNeutralLight;
+  margin-top: 50px;
+  z-index: 5;
+  color: $colorNeutralMed;
+  font-size: $fontSizeSmall;
+
+  img {
+    width: 50px;
+    height: 50px;
+  }
 }
 
 #chart {
   width: 80%;
   min-height: 100vh;
   margin: 0 auto;
-  border: 1px solid $colorNeutralLight;
   font-size: $fontSize;
   display: flex;
-  // text-align: center;
   flex-direction: column;;
-  row-gap: 20px;
+  // row-gap: 20px;
   padding-top: 30px;
-  font-family: $fontNormal;
-  color: black;
+
+  a {
+    color: $colorTertiary;
+    text-decoration: $textDec;
+    font-weight: $bold;
+  }
+
+  strong {
+    color: $colorSecondary;
+    font-size: $fontSizeNumber;
+  }
+
 
   h1 {
-    font-size: $fontSizeLarge;
-    font-weight: 700;
+    margin-bottom: 0;
+    @include important-text;
     text-align: center;
     background-color: $colorPrimary;
     background-image: linear-gradient(45deg, $colorPrimary, $colorSecondary);
@@ -42,41 +86,77 @@ body {
   }
 
   .dropdown-container {
-    margin-top: $spacing;
-    display: flex;
-    padding-bottom: 20px;
+    @include vertical-center;
+    flex-wrap: wrap;
+    width: 60%;
+    margin: auto;
+
+    > div {
+      margin: 5px 0;
+    }
+    // make dropdown drop over its siblings
+    :nth-child(2) {
+      z-index: 3;
+    }
+
+    :nth-child(4) {
+      z-index: 2;
+    }
+
   }
 
   .filter-label {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 10px;
+    white-space:nowrap;
   }
 
-  .input-container, .input-label, .text-wrapper {
-    display: flex;
+  .input-container {
+    @include vertical-center;
     justify-content: center;
-    align-items: center;
+    margin: auto;
+    text-transform: uppercase;
 
     input, button {
-      border: 1px solid $colorNeutralMed;
-      font-size: $fontSize;
+      font-size: $fontSizeNumber;
       font-family: $fontNormal;
       color: $colorNeutralText;
-      height: 20px;
-      max-width: 60px;
+      height: 36px;
+      // max-width: 220px;
       text-transform: capitalize;
-      padding: 0px 30px;
+      padding: 0px 10px;
+      margin: 0;
     }
 
     input {
       border-radius: 4px 0 0 4px;
+      border-left: $border;
+      border-top: $border;
+      border-bottom: $border;
+      border-right: none;
+      max-width: 220px;
+    }
+
+    // hide input arrows
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+      -moz-appearance: textfield;
     }
 
     button {
       border-radius: 0 4px 4px 0;
-      padding: 0px 10px;
+      border-left: $border;
+      border-top: $border;
+      border-bottom: $border;
+      border-right: $border;
+      background-color: white;
+      padding: 0px $spacing;
+      color: $colorNeutralMed;
       cursor: pointer;
     }
 
@@ -84,78 +164,219 @@ body {
 
   .input-container {
     margin-bottom: $spacing;
+    position: relative;
+    max-width: 220px;
   }
 
-  .text-wrapper {
-    // text-transform: uppercase;
+  .input-container:before {
+    content: "USD";
+    position: absolute;
+    right: 70px;
+    top: 8px;
+    height: 3px;
+    width: 3px;
+    font-size: $fontSizeSmall;
+    color: $colorNeutralMed;
     font-weight: 500;
+    transition: transform 250ms, top 250ms;
   }
 
- /* When the browser is at least 600px and above */
-@media screen and (min-width: 900px) {
-  .grid {
-    /* Apply some styles */
-    grid-template-columns: 1fr 1fr;
-
+  .input-label {
+    display: inline-block;
+    margin: 5px 0;
+    text-transform: uppercase;
+    font-weight: $bold;
+    text-align: center;
+    background-color: $colorPrimary;
+    background-image: linear-gradient(45deg, $colorPrimary, $colorSecondary);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
   }
-}
 
-@media screen and (max-width: 600px) {
-  .grid {
-    grid-template-columns: 1fr;
-
+  .intro {
+    font-weight: 500;
+    font-size: $fontSizeSmall;
+    margin: calc(2 *$spacing) 0;
+    display: flex;
+    justify-content: center;
+    :first-child{
+      width: 60%;
+      text-align: justify;
+      text-justify: inter-word;
+    }
   }
-}
 
   .grid {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr;
     justify-items: center;
     align-items: center;
     font-size: $fontSize;
     padding-top: 30px;
-    border-top: 1px dashed $colorNeutralDark;
-    gap: 50px;
+    gap: 80px;
 
-    .y-axis .tick {
-      text {
-        text-anchor: end;
-      }
+    > div {
+      width: 100%;
+    }
+
+    &.hidden {
+      display: none;
+      height: 0;
+    }
+
+    &:not(.hidden) {
+       display: grid;
     }
 
     .tick text {
       font-size: $fontSizeSmall;
-      color: $colorNeutralText;
     }
 
     text {
       font-family: $fontNormal;
-      text-anchor: middle;
       font-size: $fontSize;
+      fill: $colorNeutralText;
+      &.donut {
+        fill: $colorTertiary;
+        stroke: $colorTertiary;
+      }
+    }
 
-      &.pct {
-        font-size: 20px;
-        text-anchor: middle;
+    path.label-donut {
+      fill: $colorNeutralMed;
+    }
+    .pct {
+      @include vertical-center;
+      flex-direction: column;
+      justify-content: center;
+      :first-child {
+        width: 200px;
+        height: 200px;
+        position: relative;
 
         :first-child {
-          font-size: $fontSizeLarge;
+          @include vertical-center;
+          justify-content: center;
+          @include important-text;
+          border: 3px dashed $colorSecondary;
+          width: 200px;
+          height: 200px;
+          border-radius: 50%;
+          position: absolute;
+          z-index: 10;
         }
-
         :last-child {
-          font-size: $fontSize;
+          border: 4px solid $colorPrimary;
+          border-radius: 50%;
+          position: absolute;
         }
+      }
 
+      :last-child {
+        font-size: $fontSize;
       }
 
     }
 
     .wealth-gap {
-      stroke: $colorNeutralDark;
       fill: $colorPrimary;
     }
+
+    .wealth-line {
+      stroke: $colorSecondary;
+      stroke-width: 3;
+      fill: none;
+      stroke-linecap: round;
+    }
+
     .area-container, .percent-container, .bar-container, .donut-container {
       text-align: center;
+      width: 100%;
+      color: $colorNeutralText;
     }
+
+    .donut-container  {
+      text-anchor: middle;
+    }
+
+    .y-axis-label, .x-axis-label, .label-donut, .pct-label  {
+      text-anchor: middle;
+      fill: $colorNeutralText;
+      text-transform: uppercase;
+      font-size: $fontSizeSmall;
+    }
+
+
+  }
+
+  .disclaimer {
+    font-size: $fontSizeXSmall;
+    margin-top: 50px;
+    text-align: justify;
+    strong {
+      font-size: $fontSizeXSmall;
+      color: $colorNeutralDark;
+    }
+  }
+
+
+  /* When the browser is at least 900px and above */
+  @media screen and (min-width: 1200px) {
+    .grid {
+      grid-template-columns: 1fr 1.5fr;
+    }
+
+    .dropdown-container {
+      justify-content: space-around;
+    }
+  }
+
+    /* When the browser is 900px and below */
+
+  @media screen and (max-width: 1200px) {
+    .grid {
+      grid-template-columns: 1fr;
+      display: flex;
+      justify-content: center;
+    }
+
+    .text-wrapper {
+      text-align: justify;
+    }
+
+    .intro :first-child {
+      width: 90%;
+    }
+
+    .filter-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .dropdown-container {
+      justify-content: center;
+    }
+  }
+
+  .tooltip-line {
+    stroke: $colorTertiary;
+    stroke-linecap: round;
+
+  }
+  .tooltip {
+    background-color: $colorNeutralLight;
+    font-size: $fontSize;
+    font-family: $fontNormal;
+    font-weight: 500;
+    color: $colorTertiary;
+    position: absolute;
+    z-index: 10;
+    padding: $spacing 16px;
+    border-radius: 8px;
+    border: 2px solid $colorTertiary;
   }
 
 }
