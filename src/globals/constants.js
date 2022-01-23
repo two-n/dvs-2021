@@ -19,7 +19,7 @@ const CONFIG = {
   WIDTH: 400,
   MARGIN: { left: 80, right: 40, y: 40 },
   COLOR_RANGE: {
-    gray: ["#929292", "#464646"], color: ["#2CB1A5",
+    gray: ["#85C0F9", "#F5793A"], color: ["#2CB1A5",
       "#A05E9C"]
   },
   COLOR_NEU: "#f2f2f2",
@@ -61,7 +61,8 @@ const TEXT = {
   WEALTH: `in wealth over 30 years,
   assuming you invest that amount today in an index fund tracking the S&P 500.
   This is assuming an inflation adjusted return of over year,
-  as is the historical return of the S&P 500.`
+  as is the historical return of the S&P 500.`,
+  TOGGLE: { color: "Color Blind Mode", gray: "gray" }
 }
 
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]

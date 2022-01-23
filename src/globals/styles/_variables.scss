@@ -3,18 +3,20 @@
 
   &.color {
 
-    --colorPrimary: #929292;
-    --colorSecondary: #6c6c6c;
-    --colorTertiary: #a5a5a5;
+    --colorSecondary: #F5793A;
+    --colorTertiary: #A95AA1;
+    --colorPrimary: #85C0F9;
+    --textDec: underline;
 
   }
   &:not(.color) {
     --colorPrimary: #2CB1A5;
     --colorSecondary: #A05E9C;
     --colorTertiary: #DCB32A;
+    --textDec: none;
   }
 }
-$fontNormal: 'Poppins', sans-serif;
+$fontNormal: 'Poppins', Arial, sans-serif;
 
 // TYPOGRAPHY
 $fontSizeXSmall: 10px;
@@ -28,11 +30,10 @@ $colorNeutralLight: #f2f2f2;
 $colorNeutralMed: #a5a5a5;
 $colorNeutralText: #7f7f7f;
 $colorNeutralDark: #393838;
-$colorLink:#277D1D;
 $colorPrimary: var(--colorPrimary);
 $colorSecondary: var(--colorSecondary);
 $colorTertiary: var(--colorTertiary);
-
+$textDec: var(--textDec);
 
 $bold: 700;
 $spacing: 10px;

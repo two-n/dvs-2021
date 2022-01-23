@@ -62,7 +62,7 @@ body {
 
   a {
     color: $colorTertiary;
-    text-decoration: none;
+    text-decoration: $textDec;
     font-weight: $bold;
   }
 
@@ -73,7 +73,7 @@ body {
 
 
   h1 {
-    margin: 0;
+    margin-bottom: 0;
     @include important-text;
     text-align: center;
     background-color: $colorPrimary;
