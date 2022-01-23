@@ -48,7 +48,7 @@ export default class Chart {
     // append title
     this.selection
       .append("h1")
-      .html("How Does your Salary Compare?")
+      .html("How Does your Income Compare?")
 
     // append intro text
     this.selection
@@ -572,7 +572,7 @@ export default class Chart {
     <strong>${format("($,.0f")(Math.abs(this.gap))}
     ${this.gap > 0 ? 'less' : 'more'}</strong>
     <span>than average income of the <strong>${this.count}</strong>
-    survey respondants who met your filter criteria. The average income is ${F.dollar(this.barData[1][1].avg_pay_high)}.</span>`)
+    survey respondants who meet your filter criteria. The average yearly income is ${F.dollar(this.barData[1][1].avg_pay_high)}.</span>`)
 
     // add chart
     const svg = this.barSvg
