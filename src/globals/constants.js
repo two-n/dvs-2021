@@ -21,7 +21,8 @@ const CONFIG = {
   COLOR_RANGE: {
     gray: ["#929292", "#464646"], color: ["#2CB1A5",
       "#A05E9C"]
-  }
+  },
+  COLOR_NEU: "#f2f2f2",
 }
 
 const FILTERS = {
@@ -46,7 +47,6 @@ const REGIONS = {
   "US & Canada": ["United States", "Canada"],
 
 }
-
 const EXPERIENCE = { "Any": "All", "2 or less": ["Less than 1 year", "1", "2"], "3-5": ["3", "4", "5"], "6-10": ["6–10"], "11 or more": ["11–15", "16–20", "21–25", "26–30", "More than 30"] }
 const GENDERS = ["All", "Female", "Male", "Self-described"]
 const TEXT = {
@@ -57,7 +57,11 @@ const TEXT = {
   of those salary ranges and averaged them across the 1539 respondants. The tool below allows you to further
   filter these responses by the respondant's gender, region, and level of experience. Enter your yearly income
   below to see how you compare to the survey respondants.`,
-  EMPTY: "Sorry, there is no data for your selected filters."
+  EMPTY: "Sorry, there is no data for your selected filters.",
+  WEALTH: `in wealth over 30 years,
+  assuming you invest that amount today in an index fund tracking the S&P 500.
+  This is assuming an inflation adjusted return of over year,
+  as is the historical return of the S&P 500.`
 }
 
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
