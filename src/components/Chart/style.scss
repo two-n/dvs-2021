@@ -88,7 +88,6 @@ body {
   .dropdown-container {
     @include vertical-center;
     flex-wrap: wrap;
-    justify-content: space-evenly;
     width: 60%;
     margin: auto;
 
@@ -256,7 +255,6 @@ body {
       }
 
       :last-child {
-        padding-top: calc(3 * $spacing);
         font-size: $fontSize;
       }
 
@@ -303,17 +301,21 @@ body {
     }
   }
 
-    /* When the browser is at least 900px and above */
-  @media screen and (min-width: 900px) {
+
+  /* When the browser is at least 900px and above */
+  @media screen and (min-width: 1200px) {
     .grid {
       grid-template-columns: 1fr 1.5fr;
+    }
 
+    .dropdown-container {
+      justify-content: space-around;
     }
   }
 
     /* When the browser is 900px and below */
 
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 1200px) {
     .grid {
       grid-template-columns: 1fr;
       display: flex;

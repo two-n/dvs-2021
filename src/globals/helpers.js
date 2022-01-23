@@ -139,7 +139,8 @@ const FORMATTERS = {
   date: timeFormat("%B %_d"),
   dollar: format("($,.0f"),
   num: format("(,.0f"),
-  thou: format("$~s")
+  thou: format("$~s"),
+  cent: format("$.2f")
 }
 
 export { getBarData, getPercentData, getAreaData, getDonutData, FORMATTERS }

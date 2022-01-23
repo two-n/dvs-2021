@@ -251,7 +251,7 @@ export default class Chart {
     const xScale = scaleLinear([1, 30], [CONFIG.MARGIN.left, this.WIDTH - CONFIG.MARGIN.right])
     const yScale = scaleLinear(yDomain, yRange)
     const xAxisLine = loss ? axisTop(xScale).ticks(5).tickSizeOuter(0) : axisBottom(xScale).ticks(8).tickSizeOuter(0).tickPadding(14)
-    const yAxisLine = axisLeft(yScale).ticks(5).tickFormat(F.thou).tickSizeOuter(0)
+    const yAxisLine = axisLeft(yScale).ticks(5).tickFormat(Math.round(this.gap) === 0 ? F.cent : F.thou).tickSizeOuter(0)
 
     // add text
     this.areaText
@@ -507,13 +507,20 @@ export default class Chart {
   }
 
   drawPercent() {
+    // add text
     this.percentText
-      .html(`This means you earn <strong>${(100 - this.gapPct * 100).toFixed(0)}¢</strong> on the dollar`)
+      .html(`This means you earn <strong>${(100 - this.gapPct * 100).toFixed(0)} cents</strong> on the dollar`)
 
+    // define scale for concentric circles
     const scale = scaleSqrt()
       .domain([0, 1])
-      .range([1, 200]);
+      .range([1, 200]); // dollar circle has diameter of 200
 
+    // get width & height of div from pct
+    const pctOfWhole = 1 - this.gapPct
+    const scaledPct = scale(pctOfWhole) // scale according to dollar circle
+    const translateAmount = (200 - scaledPct) / 2 // amount circle needs to be translated to be positioned at center
+    // draw chart
     this.percentDiv
       .selectAll(`.${C.PCT}`)
       .data([this.gapPct])
@@ -530,18 +537,20 @@ export default class Chart {
           .data(d => [d])
           .join('div')
           .attr('class', 'cent-number')
-          .html(d => `${(100 - d * 100).toFixed(0)}¢`)
+          .html(d => `${(100 - d * 100).toFixed(0)}¢`) // add cent text
         )
+        // draw cents on the dollar circle
         .call(div => div
           .selectAll('.cent-circle')
           .data(d => [d])
           .join('div')
           .attr('class', 'cent-circle')
-          .style('width', `${scale(1 - this.gapPct)}px`)
-          .style('height', `${scale(1 - this.gapPct)}px`)
-          .style('left', `${(200 - scale(1 - this.gapPct)) / 2}px`)
-          .style('top', `${(200 - scale(1 - this.gapPct)) / 2}px`)
+          .style('width', `${scaledPct}px`)
+          .style('height', `${scaledPct}px`)
+          .style('left', `${translateAmount}px`)
+          .style('top', `${translateAmount}px`)
         ))
+      // draw dollar circle
       .call(div => div
         .selectAll('.pct-label')
         .data(d => [d])
@@ -729,8 +738,4 @@ export default class Chart {
     return select(this.parentNode).style('width')
   }
 
-  // clear everything
-  clear() {
-    this.selection.html("")
-  }
 }
