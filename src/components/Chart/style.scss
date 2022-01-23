@@ -112,14 +112,16 @@ body {
   .input-container, .input-label {
     @include vertical-center;
     justify-content: center;
+    margin: auto;
     text-transform: uppercase;
+    max-width: 260px;
 
     input, button {
       font-size: $fontSizeNumber;
       font-family: $fontNormal;
       color: $colorNeutralText;
       height: 36px;
-      max-width: 220px;
+      // max-width: 220px;
       text-transform: capitalize;
       padding: 0px 10px;
       margin: 0;
@@ -148,7 +150,7 @@ body {
 
     button {
       border-radius: 0 4px 4px 0;
-      border-left: none;
+      border-left: $border;
       border-top: $border;
       border-bottom: $border;
       border-right: $border;
@@ -162,6 +164,21 @@ body {
 
   .input-container {
     margin-bottom: $spacing;
+    position: relative;
+
+  }
+
+  .input-container:before {
+    content: "USD";
+    position: absolute;
+    right: 70px;
+    top: 8px;
+    height: 3px;
+    width: 3px;
+    font-size: $fontSizeSmall;
+    color: $colorNeutralMed;
+    font-weight: 500;
+    transition: transform 250ms, top 250ms;
   }
 
   .input-label {
