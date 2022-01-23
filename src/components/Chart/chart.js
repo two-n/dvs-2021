@@ -181,8 +181,6 @@ export default class Chart {
       .attr("class", "empty")
       .html(TEXT.EMPTY)
 
-    const footer = select("#footer")
-
     this.WIDTH = select('.bar-container').node().getBoundingClientRect().width
 
     this.draw()
@@ -312,12 +310,13 @@ export default class Chart {
     }
 
     function drawTooltip(e) {
-      const game = Math.floor((xScale.invert(pointer(e)[0])))
-      if (game >= min(xScale.domain()) && game <= max(xScale.domain())) {
+      const year = Math.floor((xScale.invert(pointer(e)[0])))
+
+      if (year >= min(xScale.domain()) && year <= max(xScale.domain())) {
         tooltipLine
           .attr('stroke', 'grey')
-          .attr('x1', xScale(game))
-          .attr('x2', xScale(game))
+          .attr('x1', xScale(year))
+          .attr('x2', xScale(year))
           .attr('y1', CONFIG.MARGIN.y)
           .attr('y2', CONFIG.HEIGHT - CONFIG.MARGIN.y)
           .style("stroke-width", "3px")
@@ -327,11 +326,11 @@ export default class Chart {
           .style('top', e.pageY + 10 + 'px')
           .style('left', e.pageX + 10 + 'px')
 
-        tooltip.selectAll('.game')
-          .data([game])
+        tooltip.selectAll('.year')
+          .data([year])
           .join('div')
-          .attr('class', 'game')
-          .html(d => `${F.dollar(growth[d])}`)
+          .attr('class', 'year')
+          .html(d => `${growth[d] > 0 ? '-' : '+'}${F.dollar(Math.abs(growth[d]))}`)
 
       }
     }

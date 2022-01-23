@@ -33,6 +33,18 @@ $colorPrimary: var(--colorPrimary);
 $colorSecondary: var(--colorSecondary);
 $colorTertiary: var(--colorTertiary);
 
-;
 
+$bold: 700;
 $spacing: 10px;
+
+//MIXINS
+
+@mixin vertical-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin important-text {
+  font-weight: $bold;
+  font-size: $fontSizeLarge;
+}

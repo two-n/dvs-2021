@@ -22,12 +22,11 @@ body {
     display: none;
   }
   &:not(.hidden){
-    display: flex;
+    @include vertical-center;
     justify-content: center;
-    align-items: center;
     margin-top: $spacing;
     font-size: $fontSizeNumber;
-    font-weight: 700;
+    font-weight: $bold;
     height: 100px;
   }
 }
@@ -35,10 +34,9 @@ body {
 #footer {
   width: 100%;
   min-height: 80px;
-  display: flex;
+  @include vertical-center;
   justify-content: space-between;
   padding: 0 20px;
-  align-items: center;
   border-top: 2px solid $colorNeutralMed;
   background-color: $colorNeutralLight;
   margin-top: 50px;
@@ -54,7 +52,7 @@ body {
 
 #chart {
   width: 80%;
-  min-height: 100vh;
+  // min-height: 100vh;
   margin: 0 auto;
   font-size: $fontSize;
   display: flex;
@@ -65,7 +63,7 @@ body {
   a {
     color: $colorTertiary;
     text-decoration: none;
-    font-weight: 700;
+    font-weight: $bold;
   }
 
   strong {
@@ -76,8 +74,7 @@ body {
 
   h1 {
     margin: 0;
-    font-size: $fontSizeLarge;
-    font-weight: 700;
+    @include important-text;
     text-align: center;
     background-color: $colorPrimary;
     background-image: linear-gradient(45deg, $colorPrimary, $colorSecondary);
@@ -89,13 +86,11 @@ body {
   }
 
   .dropdown-container {
-    display: flex;
+    @include vertical-center;
     flex-wrap: wrap;
-    align-items: center;
-    // gap: 20px 10px;
     justify-content: space-evenly;
     width: 60%;
-    margin:  auto;
+    margin: auto;
 
     > div {
       margin: 10px 0;
@@ -116,9 +111,8 @@ body {
   }
 
   .input-container, .input-label {
-    display: flex;
+    @include vertical-center;
     justify-content: center;
-    align-items: center;
     text-transform: uppercase;
 
     input, button {
@@ -160,9 +154,8 @@ body {
       border-bottom: $border;
       border-right: $border;
       background-color: white;
-      padding: 0px 10px;
+      padding: 0px $spacing;
       color: $colorNeutralMed;
-
       cursor: pointer;
     }
 
@@ -173,7 +166,7 @@ body {
   }
 
   .input-label {
-    font-weight: 700;
+    font-weight: $bold;
     text-align: center;
     background-color: $colorPrimary;
     background-image: linear-gradient(90deg, $colorPrimary, $colorSecondary);
@@ -185,7 +178,6 @@ body {
   }
 
   .intro {
-    text-align: center;
     font-weight: 500;
     font-size: $fontSizeSmall;
     margin-bottom: $spacing;
@@ -237,9 +229,8 @@ body {
       fill: $colorNeutralMed;
     }
     .pct {
-      display: flex;
+      @include vertical-center;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
       :first-child {
         width: 200px;
@@ -247,11 +238,9 @@ body {
         position: relative;
 
         :first-child {
-          display: flex;
-          align-items: center;
-          font-weight: 700;
+          @include vertical-center;
           justify-content: center;
-          font-size: 40px;
+          @include important-text;
           border: 3px dashed $colorSecondary;
           width: 200px;
           height: 200px;
@@ -311,61 +300,61 @@ body {
     strong {
       font-size: $fontSizeXSmall;
       color: $colorNeutralDark;
+    }
+  }
+
+    /* When the browser is at least 900px and above */
+  @media screen and (min-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr 1.5fr;
 
     }
   }
 
-   /* When the browser is at least 600px and above */
-@media screen and (min-width: 900px) {
-  .grid {
-    /* Apply some styles */
-    grid-template-columns: 1fr 1.5fr;
+    /* When the browser is 900px and below */
 
-  }
-}
+  @media screen and (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+      display: flex;
+      justify-content: center;
+    }
 
-@media screen and (max-width: 900px) {
-  .grid {
-    grid-template-columns: 1fr;
-    display: flex;
-    justify-content: center;
-  }
+    .text-wrapper {
+      text-align: justify;
+    }
 
-  .text-wrapper {
-    text-align: justify;
-  }
+    .intro :first-child {
+      width: 90%;
+    }
 
-  .intro :first-child {
-    width: 90%;
-  }
+    .filter-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
 
-  .filter-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    .dropdown-container {
+      justify-content: center;
+    }
   }
 
-  .dropdown-container {
-    justify-content: center;
+  .tooltip-line {
+    stroke: $colorTertiary;
+    stroke-linecap: round;
+
   }
-}
-
-.tooltip-line {
-  stroke: $colorTertiary;
-  stroke-linecap: round;
-
-}
-.tooltip {
-  background-color: $colorNeutralLight;
-  font-size: $fontNormal;
-  font-family: $fontNormal;
-  color: $colorTertiary;
-  position: absolute;
-  z-index: 10;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: 2px solid $colorTertiary;
-
-}
+  .tooltip {
+    background-color: $colorNeutralLight;
+    font-size: $fontSize;
+    font-family: $fontNormal;
+    font-weight: 500;
+    color: $colorTertiary;
+    position: absolute;
+    z-index: 10;
+    padding: $spacing 16px;
+    border-radius: 8px;
+    border: 2px solid $colorTertiary;
+  }
 
 }
