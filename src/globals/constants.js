@@ -60,7 +60,7 @@ const TEXT = {
   EMPTY: "Sorry, there is no data for your selected filters.",
   WEALTH: `in wealth over 30 years,
   assuming you invest that amount today in an index fund tracking the S&P 500.
-  This is assuming an inflation adjusted return of over year,
+  This is assuming an inflation adjusted return of 8.29% year over year,
   as is the historical return of the S&P 500.`,
   TOGGLE: { color: "Color Blind Mode", gray: "gray" }
 }
