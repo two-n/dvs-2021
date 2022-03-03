@@ -110,14 +110,26 @@ const getAreaData = (gap) => {
   return [lineData, wealth_sum, growth, loss]
 }
 
+
+// source https://observablehq.com/@hugodf/add-days-to-a-javascript-date
+function addDays(date, days) {
+  const copy = new Date(Number(date))
+  copy.setDate(date.getDate() + days)
+  return copy
+}
+
 const getDonutData = (gapPercent) => {
   // typical number of work days in a year
   const WORK_DAYS = 262
   // days extra worked to add to date
   const days = 365 * gapPercent
+
   // start counting from Jan 1st of this year
   const new_year = new Date(new Date().getFullYear(), 0, 1)
-  const date = FORMATTERS.date(new Date().setDate(new_year.getDate() + days))
+
+  const unformattedDate = addDays(new_year, days)
+
+  const date = FORMATTERS.date(unformattedDate)
 
   // always fill array for outer donut
   const donutData = [{ type: "worked_days", value: WORK_DAYS + gapPercent * WORK_DAYS }]
